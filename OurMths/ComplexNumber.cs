@@ -1,11 +1,11 @@
 ﻿using System;
 namespace OurMaths
 {
-    public struct Complex
+    public struct ComplexNumber
     {
         double rr, ii;
 
-        public Complex(double realPart, double imagPart)
+        public ComplexNumber(double realPart, double imagPart)
         {
             rr = realPart;
             ii = imagPart;
