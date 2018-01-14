@@ -28,10 +28,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComplexNumber.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FFT.cs" />
+    <Compile Include="PhysConst.cs" />
+    <Compile Include="GPESolver.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
