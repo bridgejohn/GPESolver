@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OurMaths", "OurMaths\OurMaths.csproj", "{CF027307-4199-4920-9D3A-8E773C40E7C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GPEForm", "..\..\..\..\..\ownCloud\Scientific Computing\Kopie\GPEForm\GPEForm.csproj", "{4E4B4058-7E8A-41B8-A991-8E1B4E8F5682}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GPEForm", "GPEForm\GPEForm.csproj", "{4E4B4058-7E8A-41B8-A991-8E1B4E8F5682}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
