@@ -104,6 +104,10 @@ namespace OurMaths
             K = new double[xSteps];
             for (int i = 0; i < xSteps; i++) { K[i] = (i - xSteps / 2 + 1) * deltaK; }
 
+            // prepare for bitReversal
+            reversedBits = new uint[xSteps];
+            for (uint i = 0; i < xSteps; i++) reversedBits[i] = FFT.BitReverse(i, (int)Math.Log(xSteps, 2));
+
 
             // create Starting wave function  
             // psi_0=sqrt(N/lx)*(1/pi)ˆ(1/4)*exp(-x.ˆ2/(2*lxˆ2));

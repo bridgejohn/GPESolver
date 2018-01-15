@@ -79,7 +79,7 @@ namespace GPEForm
             heatPsi.Y0 = 0;
             heatPsi.Y1 = 100;
             heatPsi.Interpolate = true;
-            heatPsi.RenderMethod = HeatMapRenderMethod.Bitmap;
+            //heatPsi.RenderMethod = HeatMapRenderMethod.Bitmap;
 
             LinearColorAxis cAxis = new LinearColorAxis();
             cAxis.Palette = OxyPalettes.Jet(100);
