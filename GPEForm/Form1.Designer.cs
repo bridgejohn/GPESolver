@@ -49,7 +49,6 @@
             this.DFTCheckBox = new System.Windows.Forms.CheckBox();
             this.RKCheckBox = new System.Windows.Forms.CheckBox();
             this.bitReverse = new System.Windows.Forms.CheckBox();
-            this.CalcingType = new System.Windows.Forms.CheckedListBox();
             this.label7 = new System.Windows.Forms.Label();
             this.TimeStepsTextBox = new System.Windows.Forms.TextBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
@@ -79,7 +78,7 @@
             // 
             this.massTextBox.Location = new System.Drawing.Point(868, 220);
             this.massTextBox.Name = "massTextBox";
-            this.massTextBox.Size = new System.Drawing.Size(100, 26);
+            this.massTextBox.Size = new System.Drawing.Size(100, 31);
             this.massTextBox.TabIndex = 2;
             this.massTextBox.Text = "87";
             // 
@@ -87,7 +86,7 @@
             // 
             this.RadFrequenzTextBox.Location = new System.Drawing.Point(869, 384);
             this.RadFrequenzTextBox.Name = "RadFrequenzTextBox";
-            this.RadFrequenzTextBox.Size = new System.Drawing.Size(100, 26);
+            this.RadFrequenzTextBox.Size = new System.Drawing.Size(100, 31);
             this.RadFrequenzTextBox.TabIndex = 4;
             this.RadFrequenzTextBox.Text = "100";
             // 
@@ -95,7 +94,7 @@
             // 
             this.FrequenzTextBox.Location = new System.Drawing.Point(869, 341);
             this.FrequenzTextBox.Name = "FrequenzTextBox";
-            this.FrequenzTextBox.Size = new System.Drawing.Size(100, 26);
+            this.FrequenzTextBox.Size = new System.Drawing.Size(100, 31);
             this.FrequenzTextBox.TabIndex = 5;
             this.FrequenzTextBox.Text = "40";
             // 
@@ -103,7 +102,7 @@
             // 
             this.AnzahlTextBox.Location = new System.Drawing.Point(869, 302);
             this.AnzahlTextBox.Name = "AnzahlTextBox";
-            this.AnzahlTextBox.Size = new System.Drawing.Size(100, 26);
+            this.AnzahlTextBox.Size = new System.Drawing.Size(100, 31);
             this.AnzahlTextBox.TabIndex = 6;
             this.AnzahlTextBox.Text = "1000";
             // 
@@ -111,7 +110,7 @@
             // 
             this.StreuTextBox.Location = new System.Drawing.Point(868, 261);
             this.StreuTextBox.Name = "StreuTextBox";
-            this.StreuTextBox.Size = new System.Drawing.Size(100, 26);
+            this.StreuTextBox.Size = new System.Drawing.Size(100, 31);
             this.StreuTextBox.TabIndex = 7;
             this.StreuTextBox.Text = "5,8";
             // 
@@ -120,7 +119,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(764, 223);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 20);
+            this.label1.Size = new System.Drawing.Size(106, 25);
             this.label1.TabIndex = 8;
             this.label1.Text = "Masse [u]";
             // 
@@ -129,7 +128,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(720, 264);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(121, 20);
+            this.label2.Size = new System.Drawing.Size(163, 25);
             this.label2.TabIndex = 9;
             this.label2.Text = "Streulänge [nm]";
             // 
@@ -138,7 +137,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(732, 305);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(109, 20);
+            this.label3.Size = new System.Drawing.Size(145, 25);
             this.label3.TabIndex = 10;
             this.label3.Text = "Anzahl Atome";
             // 
@@ -147,7 +146,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(696, 341);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(145, 20);
+            this.label4.Size = new System.Drawing.Size(197, 25);
             this.label4.TabIndex = 11;
             this.label4.Text = "Fallenfrequenz [2π]";
             // 
@@ -156,7 +155,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(638, 387);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(203, 20);
+            this.label5.Size = new System.Drawing.Size(276, 25);
             this.label5.TabIndex = 12;
             this.label5.Text = "Radiale Fallenfrequenz [2π]";
             this.label5.Click += new System.EventHandler(this.label5_Click);
@@ -189,7 +188,7 @@
             // 
             this.LaufzeitTextBox.Location = new System.Drawing.Point(871, 533);
             this.LaufzeitTextBox.Name = "LaufzeitTextBox";
-            this.LaufzeitTextBox.Size = new System.Drawing.Size(100, 26);
+            this.LaufzeitTextBox.Size = new System.Drawing.Size(100, 31);
             this.LaufzeitTextBox.TabIndex = 13;
             // 
             // label6
@@ -197,7 +196,7 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(753, 536);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(99, 20);
+            this.label6.Size = new System.Drawing.Size(134, 25);
             this.label6.TabIndex = 14;
             this.label6.Text = "Laufzeit [ms]";
             // 
@@ -216,7 +215,7 @@
             this.FFTCheckBox.AutoSize = true;
             this.FFTCheckBox.Location = new System.Drawing.Point(713, 27);
             this.FFTCheckBox.Name = "FFTCheckBox";
-            this.FFTCheckBox.Size = new System.Drawing.Size(64, 24);
+            this.FFTCheckBox.Size = new System.Drawing.Size(83, 29);
             this.FFTCheckBox.TabIndex = 16;
             this.FFTCheckBox.Text = "FFT";
             this.FFTCheckBox.UseVisualStyleBackColor = true;
@@ -226,7 +225,7 @@
             this.DFTCheckBox.AutoSize = true;
             this.DFTCheckBox.Location = new System.Drawing.Point(713, 58);
             this.DFTCheckBox.Name = "DFTCheckBox";
-            this.DFTCheckBox.Size = new System.Drawing.Size(66, 24);
+            this.DFTCheckBox.Size = new System.Drawing.Size(85, 29);
             this.DFTCheckBox.TabIndex = 17;
             this.DFTCheckBox.Text = "DFT";
             this.DFTCheckBox.UseVisualStyleBackColor = true;
@@ -236,7 +235,7 @@
             this.RKCheckBox.AutoSize = true;
             this.RKCheckBox.Location = new System.Drawing.Point(713, 118);
             this.RKCheckBox.Name = "RKCheckBox";
-            this.RKCheckBox.Size = new System.Drawing.Size(126, 24);
+            this.RKCheckBox.Size = new System.Drawing.Size(164, 29);
             this.RKCheckBox.TabIndex = 18;
             this.RKCheckBox.Text = "Runge-Kutta";
             this.RKCheckBox.UseVisualStyleBackColor = true;
@@ -246,31 +245,18 @@
             this.bitReverse.AutoSize = true;
             this.bitReverse.Location = new System.Drawing.Point(713, 88);
             this.bitReverse.Name = "bitReverse";
-            this.bitReverse.Size = new System.Drawing.Size(113, 24);
+            this.bitReverse.Size = new System.Drawing.Size(149, 29);
             this.bitReverse.TabIndex = 19;
             this.bitReverse.Text = "BitReverse";
             this.bitReverse.UseVisualStyleBackColor = true;
             this.bitReverse.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // CalcingType
-            // 
-            this.CalcingType.FormattingEnabled = true;
-            this.CalcingType.Items.AddRange(new object[] {
-            "FFT",
-            "DFT",
-            "BR",
-            "RungeKutta"});
-            this.CalcingType.Location = new System.Drawing.Point(988, 27);
-            this.CalcingType.Name = "CalcingType";
-            this.CalcingType.Size = new System.Drawing.Size(323, 172);
-            this.CalcingType.TabIndex = 20;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(673, 433);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(168, 20);
+            this.label7.Size = new System.Drawing.Size(227, 25);
             this.label7.TabIndex = 21;
             this.label7.Text = "Anzahl der Zeitschritte";
             // 
@@ -278,14 +264,14 @@
             // 
             this.TimeStepsTextBox.Location = new System.Drawing.Point(869, 430);
             this.TimeStepsTextBox.Name = "TimeStepsTextBox";
-            this.TimeStepsTextBox.Size = new System.Drawing.Size(100, 26);
+            this.TimeStepsTextBox.Size = new System.Drawing.Size(100, 31);
             this.TimeStepsTextBox.TabIndex = 22;
             this.TimeStepsTextBox.Text = "10000";
             // 
             // listBox1
             // 
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 20;
+            this.listBox1.ItemHeight = 25;
             this.listBox1.Location = new System.Drawing.Point(1049, 357);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(139, 204);
@@ -297,7 +283,6 @@
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.TimeStepsTextBox);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.CalcingType);
             this.Controls.Add(this.bitReverse);
             this.Controls.Add(this.RKCheckBox);
             this.Controls.Add(this.DFTCheckBox);
@@ -349,7 +334,6 @@
         private System.Windows.Forms.CheckBox DFTCheckBox;
         private System.Windows.Forms.CheckBox RKCheckBox;
         private System.Windows.Forms.CheckBox bitReverse;
-        private System.Windows.Forms.CheckedListBox CalcingType;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox TimeStepsTextBox;
         private System.Windows.Forms.ListBox listBox1;
