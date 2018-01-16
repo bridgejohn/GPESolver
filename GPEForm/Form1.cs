@@ -37,56 +37,27 @@ namespace GPEForm
             tsteps = Convert.ToInt32(TimeStepsTextBox.Text);
 
         }
-
         
-        private void DrawFunction(double[] function)
-        {
-            int NoP = function.Length;
-            Bitmap curve = new Bitmap(NoP, 500);
-            Graphics curveGraphics = Graphics.FromImage(curve);
-            Pen StandardPen = new Pen(Color.Black, 1);
-
-            this.Controls.Add(pictureBox1);
-            pictureBox1.Width = NoP;
-            pictureBox1.Height = 500;
-            pictureBox1.Image = curve;
-
-
-            //double xmin = Convert.ToDouble(XMinTextBox.Text);
-            //double xmax = Convert.ToDouble(XMaxTextBox.Text);
-
-            // int xorigin = Convert.ToInt32(NoP * (-xmin) / (xmax - xmin)); //Finde die Stelle des Ursprungs heraus abhängig von den Grenzen
-
-            for (int m = 1; m < NoP; m++) //Zeichnen der Punkte und der Linien dazwischen
-            {
-                int fm1 = Convert.ToInt32(function[m - 1]/Math.Pow(10,6));
-                int f = Convert.ToInt32(function[m] / Math.Pow(10, 6));
-                Point point1 = new Point((m - 1), -fm1 +450); //Das Minus ist wegen des Koordinatenursprungs in der linken oberen Ecke notwendig
-                Point point2 = new Point(m, -f +450);
-                curveGraphics.DrawLine(StandardPen, point1, point2);
-            }
-            
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
+            getParams();
             GPESolver gpe = new GPESolver(mass, anzahl, sclength, wx,wr);
             double[] normedPsi = new double[gpe.psi.Length];
             LineSeries plotPsi = new LineSeries();
             HeatMapSeries heatPsi = new HeatMapSeries();
-            heatPsi.X0 = 0;
-            heatPsi.X1 = gpe.psi.Length - 1;
+            heatPsi.X0 = gpe.X[0];
+            heatPsi.X1 = gpe.X[gpe.xSteps-1];
             heatPsi.Y0 = 0;
-            heatPsi.Y1 = 100;
+            heatPsi.Y1 = gpe.deltaT*tsteps;
             heatPsi.Interpolate = true;
             //heatPsi.RenderMethod = HeatMapRenderMethod.Bitmap;
 
             LinearColorAxis cAxis = new LinearColorAxis();
             cAxis.Palette = OxyPalettes.Jet(100);
-            
+
 
             PlotModel myModel = new PlotModel { Title = "Example 1" };
-            PlotModel myModel2 = new PlotModel { Title = "Example 2" };
+            PlotModel myModel2 = new PlotModel { Title = "Time Evolution of the BEC" };
 
             myModel2.Axes.Add(cAxis);
 
@@ -116,7 +87,7 @@ namespace GPEForm
                 Stopwatch1.Stop();
                 LaufzeitTextBox.Text = Convert.ToString(Stopwatch1.ElapsedMilliseconds);
                 //listBox1.Text = Convert.ToString(Stopwatch1.ElapsedMilliseconds);
-                listBox1.Items.Insert(0,"FFT:"+" "+Convert.ToString(Stopwatch1.ElapsedMilliseconds)+"ms");
+                listBox1.Items.Insert(0, "CT-FFT:" + " " + Convert.ToString(Stopwatch1.ElapsedMilliseconds) + "ms" + "  Timesteps" + tsteps.ToString());
 
 
                 for (int i = 0; i < gpe.psi.Length; i++)
@@ -141,7 +112,7 @@ namespace GPEForm
                 int writeOut = 0;
                 for (int i = 0; i < tsteps; i++)
                 {
-                    gpe.splitStepFourier("CT");
+                    gpe.splitStepFourier("DFT");
 
                     if (i == writeOut)
                     {
@@ -155,7 +126,7 @@ namespace GPEForm
                 }
                 Stopwatch2.Stop();
                 LaufzeitTextBox.Text = Convert.ToString(Stopwatch2.ElapsedMilliseconds);
-                listBox1.Items.Insert(0, "DFT:" + " " + Convert.ToString(Stopwatch2.ElapsedMilliseconds) + "ms");
+                listBox1.Items.Insert(0, "DFT:" + " " + Convert.ToString(Stopwatch2.ElapsedMilliseconds) + "ms" + "  Timesteps" + tsteps.ToString());
 
 
                 for (int i = 0; i < gpe.psi.Length; i++)
@@ -195,7 +166,7 @@ namespace GPEForm
                 }
                 Stopwatch2.Stop();
                 LaufzeitTextBox.Text = Convert.ToString(Stopwatch2.ElapsedMilliseconds);
-                listBox1.Items.Insert(0, "BR:" + " " + Convert.ToString(Stopwatch2.ElapsedMilliseconds) + "ms");
+                listBox1.Items.Insert(0, "BR-FFT:" + " " + Convert.ToString(Stopwatch2.ElapsedMilliseconds) + "ms" + "  Timesteps" + tsteps.ToString());
 
 
 
@@ -236,7 +207,7 @@ namespace GPEForm
 
             }
             
-            this.plot2.Model = myModel;
+            //this.plot2.Model = myModel;
             this.plot1.Model = myModel2;
 
 
@@ -271,7 +242,17 @@ namespace GPEForm
 
         private void ParameterButton_Click(object sender, EventArgs e)
         {
-            mass = Convert.ToDouble(massTextBox.Text)*PhysConst.amu;
+            getParams();
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void getParams()
+        {
+            mass = Convert.ToDouble(massTextBox.Text) * PhysConst.amu;
             sclength = Convert.ToDouble(StreuTextBox.Text) * Math.Pow(10, -9);
             anzahl = Convert.ToInt32(AnzahlTextBox.Text);
             wx = Convert.ToDouble(FrequenzTextBox.Text) * 2 * Math.PI;
@@ -279,7 +260,42 @@ namespace GPEForm
             tsteps = Convert.ToInt32(TimeStepsTextBox.Text);
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        private void AnzahlTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void massTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void StreuTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void FrequenzTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RadFrequenzTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void TimeStepsTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LaufzeitTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label6_Click(object sender, EventArgs e)
         {
 
         }
