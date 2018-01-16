@@ -93,7 +93,7 @@ namespace OurMaths
             kSteps = xSteps;     // number of points in momentum space
             deltaX = 2 * Math.Pow(10, -7);      // distance between points im Ortsraum
             deltaK = 2 * Math.PI / ((xSteps - 1) * deltaX);   //distance between points in momentum space
-            deltaT = Math.Pow(10, -8);       // time intervall
+            deltaT = Math.Pow(10, -7);       // time intervall
             timeSteps = 10000;   // Anzahl der Zeitentwicklungsschritte
 
             // create Grids

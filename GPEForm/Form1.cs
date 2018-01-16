@@ -96,10 +96,9 @@ namespace GPEForm
                 Stopwatch1.Start();
 
                 //FFT-CT
-                double[,] dataMap = new double[gpe.psi.Length,100];
+                double[,] dataMap = new double[gpe.psi.Length,tsteps/100];
                 int writeOut = 0;
-                for (int i = 0; i < 10000; i++)
-                // for (int i=0; i<tsteps; i++)
+                for (int i=0; i<tsteps; i++)
                 {
                     gpe.splitStepFourier("CT");
 
@@ -138,10 +137,9 @@ namespace GPEForm
                 Stopwatch Stopwatch2 = new Stopwatch();
                 Stopwatch2.Start();
 
-                double[,] dataMap = new double[gpe.psi.Length,100];
+                double[,] dataMap = new double[gpe.psi.Length, tsteps / 10];
                 int writeOut = 0;
-                for (int i = 0; i < 1000; i++)
-                // for (int i=0; i<tsteps; i++)
+                for (int i = 0; i < tsteps; i++)
                 {
                     gpe.splitStepFourier("CT");
 
@@ -179,9 +177,9 @@ namespace GPEForm
                 Stopwatch Stopwatch2 = new Stopwatch();
                 Stopwatch2.Start();
 
-                double[,] dataMap = new double[gpe.psi.Length,100];
+                double[,] dataMap = new double[gpe.psi.Length, tsteps / 100];
                 int writeOut = 0;
-                for (int i = 0; i < 10000; i++)
+                for (int i = 0; i < tsteps; i++)
                 {
                     gpe.splitStepFourier("BR");
 
