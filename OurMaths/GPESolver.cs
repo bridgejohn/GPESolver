@@ -106,7 +106,14 @@ namespace OurMaths
 
             // prepare for bitReversal
             reversedBits = new uint[xSteps];
-            for (uint i = 0; i < xSteps; i++) reversedBits[i] = FFT.BitReverse(i, (int)Math.Log(xSteps, 2));
+            int a = 0;
+            int findA = xSteps;
+            while (findA > 1)
+            {
+                findA = findA >> 1;
+                a++;
+            }
+            for (uint i = 0; i < xSteps; i++) reversedBits[i] = FFT.BitReverse(i, a);
 
 
             // create Starting wave function  

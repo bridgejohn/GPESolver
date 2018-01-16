@@ -97,17 +97,17 @@ namespace OurMaths
         // basics transform alg for a bit reversed fourier, divers between fft and ifft via the twidlefactor
         public static ComplexNumber[] Transform(bool negativeTwidleFactor, ComplexNumber[] f, uint[] reversedBits)
         {
-            ComplexNumber[] workF = f;
+            ComplexNumber[] workF = (ComplexNumber[]) f.Clone();
             int size = f.Length;
             if (size != reversedBits.Length) throw new Exception("The arrays dont have the same lenght");
-            int a;
-            if (Math.Log(size, 2) != Math.Truncate(Math.Log(size, 2)))
+            int a = 0;
+            int findA = size;
+            while (findA > 1)
             {
-                throw new Exception("The array size is not a power of 2");
-            } else {
-                a = (int)Math.Log(size, 2);
+                findA = findA >> 1;
+                a++;
             }
-                
+
             int preFactor;
             if (negativeTwidleFactor) { preFactor = -1; } else { preFactor = 1; }
             ComplexNumber even, odd, wM, w;
