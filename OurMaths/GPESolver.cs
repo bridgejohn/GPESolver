@@ -93,7 +93,7 @@ namespace OurMaths
             kSteps = xSteps;     // number of points in momentum space
             deltaX = 2 * Math.Pow(10, -7);      // distance between points im Ortsraum
             deltaK = 2 * Math.PI / ((xSteps - 1) * deltaX);   //distance between points in momentum space
-            deltaT = Math.Pow(10, -7);       // time intervall
+            deltaT = Math.Pow(10, -6);       // time intervall
             timeSteps = 10000;   // Anzahl der Zeitentwicklungsschritte
 
             // create Grids
@@ -212,6 +212,7 @@ namespace OurMaths
             double mu_old;
             double mu_error = 1;
             double[] NormOfPsi = new double[psi.Length];
+            ComplexNumber[] psi_old = new ComplexNumber[psi.Length];
             for (int i = 0; i < psi.Length; i++)
             {
                 NormOfPsi[i] = deltaX * Math.Pow(psi[i].Norm(), 2);
@@ -220,14 +221,14 @@ namespace OurMaths
             while (mu_error > Math.Pow(10, -8))
             {
                 // creation of new wave function
-                ComplexNumber[] psi_old = psi;
+                psi_old = (ComplexNumber[]) psi.Clone();
                 for (int i = 0; i < psi.Length; i++)
                 {
                     psi[i] = psi[i]*Math.Exp(-0.5 * deltaT * (V[i] + g1D / PhysConst.hbar * Math.Pow(psi[i].Norm(), 2)));
                 }
 
-                ComplexNumber[] psi_k = new ComplexNumber[psi.Length];
-                psi = FFT.CT(psi); // Fourier transformation of the wave function with the Cooley-Tukey algorithm
+                //ComplexNumber[] psi_k = new ComplexNumber[psi.Length];
+                psi = FFT.BR(psi,reversedBits); // Fourier transformation of the wave function with the Cooley-Tukey algorithm
                 psi = FFT.Shift(psi);  //
                 for (int i = 0; i < psi.Length; i++) psi[i] = psi[i] / xSteps;
 
@@ -238,7 +239,7 @@ namespace OurMaths
                     psi[i] = psi[i]*Math.Exp(-0.5 * deltaT * (PhysConst.hbar / this.mass * Math.Pow(psi[i].Norm(), 2)));
                 }
                 psi = FFT.Shift(psi);
-                psi = FFT.ICT(psi); //Inverse fourier transformation of the wave function with the Cooley-tukey algorithm
+                psi = FFT.IBR(psi,reversedBits); //Inverse fourier transformation of the wave function with the Cooley-tukey algorithm
 
                 for (int i = 0; i < psi.Length; i++) psi[i] = psi[i] * kSteps;
 
