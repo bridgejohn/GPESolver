@@ -45,11 +45,13 @@ namespace OurMaths
 
 
             /// Grid definitions
-            xSteps = 512;  // number of points im Ortsraum; power of two
+            
+
+xSteps = 512;  // number of points im Ortsraum; power of two
             kSteps = xSteps;     // number of points in momentum space
             deltaX = 2 * Math.Pow(10, -7);      // distance between points im Ortsraum
             deltaK = 2 * Math.PI / ((xSteps - 1) * deltaX);   //distance between points in momentum space
-            deltaT = Math.Pow(10, -8);       // time intervall
+            deltaT = Math.Pow(10, -6);       // time intervall
             timeSteps = 100;   // Anzahl der Zeitentwicklungsschritte
 
             // create Grids
@@ -62,7 +64,7 @@ namespace OurMaths
 
             // prepare for bitReversal
             reversedBits = new uint[xSteps];
-            for (uint i = 0; i < xSteps; i++) reversedBits[i] = FFT.BitReverse(i, (int) Math.Log(xSteps, 2));
+            for (uint i = 0; i < xSteps; i++) reversedBits[i] = FFT.BitReverse(i, (int)Math.Log(xSteps, 2));
 
             // create Starting wave function  
             // psi_0=sqrt(N/lx)*(1/pi)ˆ(1/4)*exp(-x.ˆ2/(2*lxˆ2));
@@ -89,7 +91,9 @@ namespace OurMaths
 
 
             /// Grid definitions
-            xSteps = 512;  // number of points im Ortsraum; power of two
+            
+
+xSteps = 512;  // number of points im Ortsraum; power of two
             kSteps = xSteps;     // number of points in momentum space
             deltaX = 2 * Math.Pow(10, -7);      // distance between points im Ortsraum
             deltaK = 2 * Math.PI / ((xSteps - 1) * deltaX);   //distance between points in momentum space
@@ -130,7 +134,7 @@ namespace OurMaths
 
         public void splitStepFourier(string FT)
         {
-            
+
             int size = this.psi.Length;
 
 
@@ -151,7 +155,7 @@ namespace OurMaths
                     psi = FFT.CT(psi);
                     break;
                 case "BR":
-                    psi = FFT.BR(psi,reversedBits);
+                    psi = FFT.BR(psi, reversedBits);
                     break;
                 default:
                     break;
@@ -211,7 +215,7 @@ namespace OurMaths
             double mu = 1;
             double mu_old;
             double mu_error = 1;
-            
+
             ComplexNumber[] psi_old = new ComplexNumber[psi.Length];
 
             double NormOfPsi = 0;
@@ -219,22 +223,22 @@ namespace OurMaths
             {
                 NormOfPsi += Math.Pow(psi[i].Norm(), 2);
             }
-            NormOfPsi = Math.Sqrt(NormOfPsi)*deltaX;
-            
-           
+            NormOfPsi = Math.Sqrt(NormOfPsi) * deltaX;
+
+
 
             int j = 0;
             while (mu_error > Math.Pow(10, -8))
             {
                 // creation of new wave function
-                psi_old = (ComplexNumber[]) psi.Clone();
+                psi_old = (ComplexNumber[])psi.Clone();
                 for (int i = 0; i < psi.Length; i++)
                 {
-                    psi[i] = psi[i]*Math.Exp(-0.5 * deltaT * (V[i] + g1D / PhysConst.hbar * Math.Pow(psi[i].Norm(), 2)));
+                    psi[i] = psi[i] * Math.Exp(-0.5 * deltaT * (V[i] + g1D / PhysConst.hbar * Math.Pow(psi[i].Norm(), 2)));
                 }
 
                 //ComplexNumber[] psi_k = new ComplexNumber[psi.Length];
-                psi = FFT.BR(psi,reversedBits); // Fourier transformation of the wave function with the Cooley-Tukey algorithm
+                psi = FFT.BR(psi, reversedBits); // Fourier transformation of the wave function with the Cooley-Tukey algorithm
                 psi = FFT.Shift(psi);  //
                 for (int i = 0; i < psi.Length; i++) psi[i] = psi[i] / xSteps;
 
@@ -242,10 +246,10 @@ namespace OurMaths
                 // psi = psi*exp((-0.5*deltaT*hbar*|k|^2)/m)
                 for (int i = 0; i < psi.Length; i++)
                 {
-                    psi[i] = psi[i]*Math.Exp(-0.5 * deltaT * (PhysConst.hbar / this.mass * Math.Pow(K[i], 2)));
+                    psi[i] = psi[i] * Math.Exp(-0.5 * deltaT * (PhysConst.hbar / this.mass * Math.Pow(K[i], 2)));
                 }
                 psi = FFT.Shift(psi);
-                psi = FFT.IBR(psi,reversedBits); //Inverse fourier transformation of the wave function with the Cooley-tukey algorithm
+                psi = FFT.IBR(psi, reversedBits); //Inverse fourier transformation of the wave function with the Cooley-tukey algorithm
 
                 for (int i = 0; i < psi.Length; i++) psi[i] = psi[i] * kSteps;
 
@@ -253,7 +257,7 @@ namespace OurMaths
                 // psi = psi*exp(-0.5*deltaT*V(x)+g1D/hbar * |psi|^2)
                 for (int i = 0; i < psi.Length; i++)
                 {
-                    psi[i] = psi[i]*Math.Exp(-0.5 * deltaT * (V[i] + g1D / PhysConst.hbar * Math.Pow(psi[i].Norm(), 2)));
+                    psi[i] = psi[i] * Math.Exp(-0.5 * deltaT * (V[i] + g1D / PhysConst.hbar * Math.Pow(psi[i].Norm(), 2)));
                 }
 
                 mu_old = mu;
@@ -276,6 +280,7 @@ namespace OurMaths
                 {
                     break;
                 }
+                j++;
 
             }
 
@@ -297,6 +302,27 @@ namespace OurMaths
             {
                 psi[i] = psi[i] * ComplexNumber.Exp(-0.5 * ComplexNumber.ImaginaryOne * deltaT * PhysConst.hbar / mass * Math.Pow(K[i], 2));
             }
+        }
+
+        public void updateGPEParameter(ComplexNumber[] psi, double atomMass, int numberOfAtoms, double scatteringlength, double wx, double wr)
+        {
+            // Physical Defintion
+            mass = atomMass;       // mass of rubidium
+            aSc = scatteringlength;    // Scattering Length 
+            N = numberOfAtoms;                        // Atom number
+            wX = wx;           // trap freq
+            lX = Math.Sqrt(PhysConst.hbar / (mass * wX)); //ho length of trap
+            wR = wr;
+
+
+            lR = Math.Sqrt(PhysConst.hbar / (mass * wR)); // ho length of trap
+
+            g1D = 2 * Math.Pow(PhysConst.hbar, 2) * aSc / (mass * lR * lR);
+        }
+
+        public void changeCenterOfV(double shift)
+        {
+            for (int i = 0; i < xSteps; i++) { V[i] = 0.5 * mass * wX * wX * Math.Pow(X[i] + shift, 2) / PhysConst.hbar; }
         }
     }
 }
