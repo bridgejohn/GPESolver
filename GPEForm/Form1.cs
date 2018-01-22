@@ -147,7 +147,7 @@ namespace GPEForm
 
                 Stopwatch Stopwatch2 = new Stopwatch();
                 Stopwatch2.Start();
-                //gpe.getGroundState();
+                gpe.getGroundState();
                 double[,] dataMap = new double[gpe.psi.Length, tsteps / 100];
                 int writeOut = 0;
                 for (int i = 0; i < tsteps; i++)

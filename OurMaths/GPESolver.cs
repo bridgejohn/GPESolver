@@ -211,12 +211,18 @@ namespace OurMaths
             double mu = 1;
             double mu_old;
             double mu_error = 1;
-            double[] NormOfPsi = new double[psi.Length];
+            
             ComplexNumber[] psi_old = new ComplexNumber[psi.Length];
+
+            double NormOfPsi = 0;
             for (int i = 0; i < psi.Length; i++)
             {
-                NormOfPsi[i] = deltaX * Math.Pow(psi[i].Norm(), 2);
+                NormOfPsi += Math.Pow(psi[i].Norm(), 2);
             }
+            NormOfPsi = Math.Sqrt(NormOfPsi)*deltaX;
+            
+           
+
             int j = 0;
             while (mu_error > Math.Pow(10, -8))
             {
@@ -236,7 +242,7 @@ namespace OurMaths
                 // psi = psi*exp((-0.5*deltaT*hbar*|k|^2)/m)
                 for (int i = 0; i < psi.Length; i++)
                 {
-                    psi[i] = psi[i]*Math.Exp(-0.5 * deltaT * (PhysConst.hbar / this.mass * Math.Pow(psi[i].Norm(), 2)));
+                    psi[i] = psi[i]*Math.Exp(-0.5 * deltaT * (PhysConst.hbar / this.mass * Math.Pow(K[i], 2)));
                 }
                 psi = FFT.Shift(psi);
                 psi = FFT.IBR(psi,reversedBits); //Inverse fourier transformation of the wave function with the Cooley-tukey algorithm
@@ -254,9 +260,17 @@ namespace OurMaths
                 mu = Math.Log((psi_old[psi_old.Length / 2] / psi[psi.Length / 2]).Norm()) / deltaT;
                 mu_error = Math.Abs(mu - mu_old) / mu;
 
+
+                double currentNormOfPsi = 0;
                 for (int i = 0; i < psi.Length; i++)
                 {
-                    psi[i] = psi[i] * Math.Sqrt(NormOfPsi[i]) / Math.Sqrt((deltaX * Math.Pow(psi[i].Norm(), 2)));
+                    currentNormOfPsi += Math.Pow(psi[i].Norm(), 2);
+                }
+                currentNormOfPsi = Math.Sqrt(currentNormOfPsi) * deltaX;
+
+                for (int i = 0; i < psi.Length; i++)
+                {
+                    psi[i] = psi[i] * Math.Sqrt(NormOfPsi) / Math.Sqrt(currentNormOfPsi);
                 }
                 if (j > Math.Pow(10, 8))
                 {
