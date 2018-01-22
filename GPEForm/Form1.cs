@@ -25,28 +25,50 @@ namespace GPEForm
         private double wr; // radial trap frequency
         private int tsteps; // number of time steps
 
+        //Erstellung des Plotbereichs
+        private PlotModel myModel = new PlotModel { Title = "|Ψ|²" };
+        private PlotModel potModel = new PlotModel { Title = "V" };
+        private PlotModel timeModel = new PlotModel { Title = "Time Evolution of the BEC" };
+        private LineSeries plotPsi = new LineSeries(); //Erstellen des Datenreihe für Psi²
+        private LineSeries plotPsi0 = new LineSeries(); //Erstellen des Datenreihe für Psi², Grundzustand
+        private LineSeries plotPsiStart = new LineSeries();
+        private LineSeries plotV = new LineSeries();
+        private HeatMapSeries heatPsi = new HeatMapSeries();
+
+
+
+        private GPESolver gpe;
+
+
+
         public Form1()
         {
             InitializeComponent();
             //read out of parameters
-            mass = Convert.ToDouble(massTextBox.Text)*PhysConst.amu;
+            mass = Convert.ToDouble(massTextBox.Text) * PhysConst.amu;
             sclength = Convert.ToDouble(StreuTextBox.Text) * Math.Pow(10, -9);
             anzahl = Convert.ToInt32(AnzahlTextBox.Text);
             wx = Convert.ToDouble(FrequenzTextBox.Text) * 2 * Math.PI;
             wr = Convert.ToDouble(RadFrequenzTextBox.Text) * 2 * Math.PI;
             tsteps = Convert.ToInt32(TimeStepsTextBox.Text);
+            gpe = new GPESolver(mass, anzahl, sclength, wx, wr);
+            for (int k = 0; k < gpe.psi.Length; k++)
+            {
+                plotV.Points.Add(new DataPoint(gpe.X[k], gpe.V[k]));
+            }
+            potModel.Series.Add(plotV);
+            this.plot1.Model = potModel; //Darstellen des Plots
 
         }
         
         private void button1_Click(object sender, EventArgs e)
         {
             getParams(); //Auslesen der Parameter
-            GPESolver gpe = new GPESolver(mass, anzahl, sclength, wx,wr);// Erstellen des GPE-Solvers
+            gpe = new GPESolver(mass, anzahl, sclength, wx,wr);// Erstellen des GPE-Solvers
             double[] normedPsi = new double[gpe.psi.Length]; //Erstellen eines Arrays für Psi²
-
             //Vorbereitung des Plots
-            LineSeries plotPsi = new LineSeries(); //Erstellen des Datenreihe für Psi²
-            HeatMapSeries heatPsi = new HeatMapSeries(); //Erstellen des Datenrasters zur Darstellung von Psi(t)
+            
+            //Erstellen des Datenrasters zur Darstellung von Psi(t)
             heatPsi.X0 = gpe.X[0]; //Festlegen von xmin
             heatPsi.X1 = gpe.X[gpe.xSteps-1]; //Festlegen von xmin
             heatPsi.Y0 = 0; //Festlegen der Höhe des PLots
@@ -57,9 +79,16 @@ namespace GPEForm
             LinearColorAxis cAxis = new LinearColorAxis(); //Erstellen der Farbskala
             cAxis.Palette = OxyPalettes.Jet(100); //Verwendung der 'Jet-Skala'
 
-            //Erstellung des Plotbereichs
-            PlotModel myModel = new PlotModel { Title = "|Ψ|²" }; 
-            PlotModel timeModel = new PlotModel { Title = "Time Evolution of the BEC" };
+            plotV.Points.Clear();
+            for (int k = 0; k < gpe.psi.Length; k++)
+            {
+                plotV.Points.Add(new DataPoint(gpe.X[k], gpe.V[k]));
+            }
+            potModel.Series.Clear();
+            potModel.Series.Add(plotV);
+            this.plot1.Model = potModel; //Darstellen des Plots
+
+
 
             timeModel.Axes.Add(cAxis); //Hinzufügen der Farbskala
             double[,] dataMap = new double[gpe.psi.Length, tsteps / 100]; //Erstellen des Datenarrays für den zeitabhängigen Plot
@@ -70,12 +99,34 @@ namespace GPEForm
             Stopwatch1.Start(); //Starten der Laufzeit
 
             //Entscheidung der Methode zur Lösung der GPE
+            string method;
+
+
             if (FFTCheckBox.Checked)
             {
-                for (int i=0; i<tsteps; i++)
-                {
+                method = "CT";
+            } else if (DFTCheckBox.Checked)
+            {
+                method = "DFT";
+            } else if (bitReverse.Checked)
+            {
+                method = "BR";
+            } else
+            {
+                method = "BR";
+            }
+
+            ComplexNumber[] psiStart = (ComplexNumber[]) gpe.psi.Clone();
+
+            if (getgroundstate.Checked) { gpe.getGroundState(); }
+            
+
+
+            for (int i=0; i<tsteps; i++)
+            {
                     //Berechnung der Funktion Ψ(t) mit der Split-Step-Fourier Methode unter Benutzung des Cooley-Tukey-Algorithmus
-                    gpe.splitStepFourier("CT"); 
+                    gpe.splitStepFourier(method);
+                    
 
                     //Füllen des Plotarrays mit den Werten aus der Berechnung für alle 100 Schritte
                     if (i == writeOut)
@@ -87,89 +138,34 @@ namespace GPEForm
                         }
                         writeOut += 100;
                     }
-                    //Schreiben der Daten von |Ψ|² in das Plotarray
-                    for (int k = 0; k < gpe.psi.Length; k++)
-                    {
-                        normedPsi[k] = Math.Pow(gpe.psi[k].Norm(), 2);
-                        plotPsi.Points.Add(new DataPoint(gpe.X[k], normedPsi[k]));
-                    }
-
-                }
             }
-            if (DFTCheckBox.Checked)
-            {
-                for (int i = 0; i < tsteps; i++)
-                {
-                    //Berechnung der Funktion Ψ(t) mit der Split-Step-Fourier Methode unter Benutzung der Diskreten FT
-                    gpe.splitStepFourier("DFT");
-
-                    //Füllen des Plotarrays mit den Werten aus der Berechnung für alle 10 Schritte
-                    if (i == writeOut)
-                    {
-                        for (int k = 0; k < gpe.psi.Length; k++)
-                        {
-                            dataMap[k, i / 10] = Math.Pow(gpe.psi[k].Norm(), 2);
-
-                        }
-                        writeOut += 10;
-                    }
-                    //Schreiben der Daten von |Ψ|² in das Plotarray
-                    for (int k = 0; k < gpe.psi.Length; k++)
-                    {
-                        normedPsi[k] = Math.Pow(gpe.psi[k].Norm(), 2);
-                        plotPsi.Points.Add(new DataPoint(gpe.X[k], normedPsi[k]));
-                    }
-
-                }
-            }
-            if (bitReverse.Checked)
-            {
-                for (int i = 0; i < tsteps; i++)
-                {
-                    //Berechnung der Funktion Ψ(t) mit der Split-Step-Fourier Methode unter Benutzung der Bit-Reverse Methode
-                    gpe.splitStepFourier("BR");
-
-                    //Füllen des Plotarrays mit den Werten aus der Berechnung für alle 100 Schritte
-                    if (i == writeOut)
-                    {
-                        for (int k = 0; k < gpe.psi.Length; k++)
-                        {
-                            dataMap[k, i / 100] = Math.Pow(gpe.psi[k].Norm(), 2);
-
-                        }
-                        writeOut += 100;
-                    }
-                    //Schreiben der Daten von |Ψ|² in das Plotarray
-                    for (int k = 0; k < gpe.psi.Length; k++)
-                    {
-                        normedPsi[k] = Math.Pow(gpe.psi[k].Norm(), 2);
-                        plotPsi.Points.Add(new DataPoint(gpe.X[k], normedPsi[k]));
-                    }
-
-                }
-            }
-            
+           
             Stopwatch1.Stop(); //Stoppen der Zeit nach Berechnung
             LaufzeitTextBox.Text = Convert.ToString(Stopwatch1.ElapsedMilliseconds); //Zeitausgabe in TextBox 
-            listBox1.Items.Insert(0, "CT-FFT:" + " " + Convert.ToString(Stopwatch1.ElapsedMilliseconds) + "ms" + "  Timesteps" + tsteps.ToString()); //Hinzufügen der Laufzeit, der verwendeten Methode und der Anzahl der Zeitschritte in ListBox
+            listBox1.Items.Insert(0, method + "-FFT:" + " " + Convert.ToString(Stopwatch1.ElapsedMilliseconds) + "ms" + "  Timesteps" + tsteps.ToString()); //Hinzufügen der Laufzeit, der verwendeten Methode und der Anzahl der Zeitschritte in ListBox
 
-            
 
-            
-            
-
-            //Plotauswahl
-            if (timePlotCheckBox.Checked)
+            // oxyplot models vorbereiten um dann in 
+            heatPsi.Data = dataMap; //Überschreiben der berechneten Daten in das Plotarray
+            timeModel.Series.Clear();
+            timeModel.Series.Add(heatPsi); //
+                                           //Schreiben der Daten von |Ψ|² in das Plotarray
+            for (int k = 0; k < gpe.psi.Length; k++)
             {
-                heatPsi.Data = dataMap; //Überschreiben der berechneten Daten in das Plotarray
-                timeModel.Series.Add(heatPsi); //
-                this.plot1.Model = timeModel; //Darstellen des Plots
+                normedPsi[k] = Math.Pow(gpe.psi[k].Norm(), 2);
+                plotPsi.Points.Add(new DataPoint(gpe.X[k], normedPsi[k]));
+                normedPsi[k] = Math.Pow(psiStart[k].Norm(), 2);
+                plotPsiStart.Points.Add(new DataPoint(gpe.X[k], normedPsi[k]));
+
             }
-            else
-            {
-                myModel.Series.Add(plotPsi); //
-                this.plot1.Model = myModel; // Darstellen des Plots
-            }
+
+            myModel.Series.Clear();
+            myModel.Series.Add(plotPsiStart);
+            myModel.Series.Add(plotPsi); //
+
+           
+            this.plot1.Model = timeModel; //Darstellen des Plots
+           
 
             //if(RKCheckBox.Checked)
             //{
@@ -246,7 +242,22 @@ namespace GPEForm
             tsteps = Convert.ToInt32(TimeStepsTextBox.Text);
         }
 
-        private void AnzahlTextBox_TextChanged(object sender, EventArgs e)
+        private void timeEvolutionButton_Click(object sender, EventArgs e)
+        {
+            this.plot1.Model = timeModel;
+        }
+
+        private void psiPlotButton_Click(object sender, EventArgs e)
+        {
+            this.plot1.Model = myModel;
+        }
+
+        private void potentialButton_Click(object sender, EventArgs e)
+        {
+            this.plot1.Model = potModel;
+        }
+
+        private void StreuTextBox_TextChanged(object sender, EventArgs e)
         {
 
         }
@@ -256,33 +267,48 @@ namespace GPEForm
 
         }
 
-        private void StreuTextBox_TextChanged(object sender, EventArgs e)
+        private void AnzahlTextBox_TextChanged(object sender, EventArgs e)
         {
 
         }
 
-        private void FrequenzTextBox_TextChanged(object sender, EventArgs e)
+        private void shiftPotButton_Click(object sender, EventArgs e)
         {
+            gpe.changeCenterOfV(Math.Pow(10, -5) * 1);
+            plotV.Points.Clear();
+            for (int k = 0; k < gpe.psi.Length; k++)
+            {
+                plotV.Points.Add(new DataPoint(gpe.X[k], gpe.V[k]));
+            }
+            potModel.Series.Clear();
+            potModel.Series.Add(plotV);
+            this.plot1.Model = potModel;
 
-        }
+            double[,] dataMap = new double[gpe.psi.Length, tsteps / 100];
+            int writeOut = 0;
+            for (int i = 0; i < tsteps; i++)
+            {
+                //Berechnung der Funktion Ψ(t) mit der Split-Step-Fourier Methode unter Benutzung des Cooley-Tukey-Algorithmus
+                gpe.splitStepFourier("BR");
 
-        private void RadFrequenzTextBox_TextChanged(object sender, EventArgs e)
-        {
 
-        }
+                //Füllen des Plotarrays mit den Werten aus der Berechnung für alle 100 Schritte
+                if (i == writeOut)
+                {
+                    for (int k = 0; k < gpe.psi.Length; k++)
+                    {
+                        dataMap[k, i / 100] = Math.Pow(gpe.psi[k].Norm(), 2);
 
-        private void TimeStepsTextBox_TextChanged(object sender, EventArgs e)
-        {
+                    }
+                    writeOut += 100;
+                }
+            }
 
-        }
+            heatPsi.Data = dataMap; //Überschreiben der berechneten Daten in das Plotarray
+            timeModel.Series.Clear();
+            timeModel.Series.Add(heatPsi);
 
-        private void LaufzeitTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label6_Click(object sender, EventArgs e)
-        {
+            this.plot1.Model = timeModel;
 
         }
     }
