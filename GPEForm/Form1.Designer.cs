@@ -55,6 +55,7 @@
             this.psiPlotButton = new System.Windows.Forms.Button();
             this.potentialButton = new System.Windows.Forms.Button();
             this.shiftPotButton = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // TimeStepIt
@@ -72,7 +73,7 @@
             // 
             this.massTextBox.Location = new System.Drawing.Point(782, 223);
             this.massTextBox.Name = "massTextBox";
-            this.massTextBox.Size = new System.Drawing.Size(100, 31);
+            this.massTextBox.Size = new System.Drawing.Size(100, 20);
             this.massTextBox.TabIndex = 2;
             this.massTextBox.Text = "87";
             this.massTextBox.TextChanged += new System.EventHandler(this.massTextBox_TextChanged);
@@ -81,7 +82,7 @@
             // 
             this.RadFrequenzTextBox.Location = new System.Drawing.Point(783, 387);
             this.RadFrequenzTextBox.Name = "RadFrequenzTextBox";
-            this.RadFrequenzTextBox.Size = new System.Drawing.Size(100, 31);
+            this.RadFrequenzTextBox.Size = new System.Drawing.Size(100, 20);
             this.RadFrequenzTextBox.TabIndex = 4;
             this.RadFrequenzTextBox.Text = "100";
             // 
@@ -89,7 +90,7 @@
             // 
             this.FrequenzTextBox.Location = new System.Drawing.Point(783, 344);
             this.FrequenzTextBox.Name = "FrequenzTextBox";
-            this.FrequenzTextBox.Size = new System.Drawing.Size(100, 31);
+            this.FrequenzTextBox.Size = new System.Drawing.Size(100, 20);
             this.FrequenzTextBox.TabIndex = 5;
             this.FrequenzTextBox.Text = "40";
             // 
@@ -97,7 +98,7 @@
             // 
             this.AnzahlTextBox.Location = new System.Drawing.Point(783, 305);
             this.AnzahlTextBox.Name = "AnzahlTextBox";
-            this.AnzahlTextBox.Size = new System.Drawing.Size(100, 31);
+            this.AnzahlTextBox.Size = new System.Drawing.Size(100, 20);
             this.AnzahlTextBox.TabIndex = 6;
             this.AnzahlTextBox.Text = "1000";
             this.AnzahlTextBox.TextChanged += new System.EventHandler(this.AnzahlTextBox_TextChanged);
@@ -106,7 +107,7 @@
             // 
             this.StreuTextBox.Location = new System.Drawing.Point(782, 264);
             this.StreuTextBox.Name = "StreuTextBox";
-            this.StreuTextBox.Size = new System.Drawing.Size(100, 31);
+            this.StreuTextBox.Size = new System.Drawing.Size(100, 20);
             this.StreuTextBox.TabIndex = 7;
             this.StreuTextBox.Text = "5,8";
             this.StreuTextBox.TextChanged += new System.EventHandler(this.StreuTextBox_TextChanged);
@@ -116,7 +117,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(459, 226);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(106, 25);
+            this.label1.Size = new System.Drawing.Size(53, 13);
             this.label1.TabIndex = 8;
             this.label1.Text = "Masse [u]";
             // 
@@ -125,7 +126,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(459, 264);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(163, 25);
+            this.label2.Size = new System.Drawing.Size(81, 13);
             this.label2.TabIndex = 9;
             this.label2.Text = "Streulänge [nm]";
             // 
@@ -134,7 +135,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(459, 308);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(145, 25);
+            this.label3.Size = new System.Drawing.Size(72, 13);
             this.label3.TabIndex = 10;
             this.label3.Text = "Anzahl Atome";
             // 
@@ -143,7 +144,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(459, 347);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(197, 25);
+            this.label4.Size = new System.Drawing.Size(97, 13);
             this.label4.TabIndex = 11;
             this.label4.Text = "Fallenfrequenz [2π]";
             // 
@@ -152,7 +153,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(459, 390);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(276, 25);
+            this.label5.Size = new System.Drawing.Size(136, 13);
             this.label5.TabIndex = 12;
             this.label5.Text = "Radiale Fallenfrequenz [2π]";
             this.label5.Click += new System.EventHandler(this.label5_Click);
@@ -173,7 +174,7 @@
             // 
             this.LaufzeitTextBox.Location = new System.Drawing.Point(783, 501);
             this.LaufzeitTextBox.Name = "LaufzeitTextBox";
-            this.LaufzeitTextBox.Size = new System.Drawing.Size(100, 31);
+            this.LaufzeitTextBox.Size = new System.Drawing.Size(100, 20);
             this.LaufzeitTextBox.TabIndex = 13;
             // 
             // label6
@@ -181,7 +182,7 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(467, 501);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(217, 25);
+            this.label6.Size = new System.Drawing.Size(107, 13);
             this.label6.TabIndex = 14;
             this.label6.Text = "Aktuelle Laufzeit [ms]";
             // 
@@ -200,7 +201,7 @@
             this.FFTCheckBox.AutoSize = true;
             this.FFTCheckBox.Location = new System.Drawing.Point(408, 30);
             this.FFTCheckBox.Name = "FFTCheckBox";
-            this.FFTCheckBox.Size = new System.Drawing.Size(83, 29);
+            this.FFTCheckBox.Size = new System.Drawing.Size(45, 17);
             this.FFTCheckBox.TabIndex = 16;
             this.FFTCheckBox.Text = "FFT";
             this.FFTCheckBox.UseVisualStyleBackColor = true;
@@ -210,7 +211,7 @@
             this.DFTCheckBox.AutoSize = true;
             this.DFTCheckBox.Location = new System.Drawing.Point(408, 61);
             this.DFTCheckBox.Name = "DFTCheckBox";
-            this.DFTCheckBox.Size = new System.Drawing.Size(85, 29);
+            this.DFTCheckBox.Size = new System.Drawing.Size(47, 17);
             this.DFTCheckBox.TabIndex = 17;
             this.DFTCheckBox.Text = "DFT";
             this.DFTCheckBox.UseVisualStyleBackColor = true;
@@ -220,7 +221,7 @@
             this.getgroundstate.AutoSize = true;
             this.getgroundstate.Location = new System.Drawing.Point(408, 121);
             this.getgroundstate.Name = "getgroundstate";
-            this.getgroundstate.Size = new System.Drawing.Size(287, 29);
+            this.getgroundstate.Size = new System.Drawing.Size(146, 17);
             this.getgroundstate.TabIndex = 18;
             this.getgroundstate.Text = "Grundzustand berechnen";
             this.getgroundstate.UseVisualStyleBackColor = true;
@@ -230,7 +231,7 @@
             this.bitReverse.AutoSize = true;
             this.bitReverse.Location = new System.Drawing.Point(408, 91);
             this.bitReverse.Name = "bitReverse";
-            this.bitReverse.Size = new System.Drawing.Size(149, 29);
+            this.bitReverse.Size = new System.Drawing.Size(78, 17);
             this.bitReverse.TabIndex = 19;
             this.bitReverse.Text = "BitReverse";
             this.bitReverse.UseVisualStyleBackColor = true;
@@ -241,7 +242,7 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(459, 436);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(227, 25);
+            this.label7.Size = new System.Drawing.Size(112, 13);
             this.label7.TabIndex = 21;
             this.label7.Text = "Anzahl der Zeitschritte";
             // 
@@ -249,17 +250,16 @@
             // 
             this.TimeStepsTextBox.Location = new System.Drawing.Point(783, 433);
             this.TimeStepsTextBox.Name = "TimeStepsTextBox";
-            this.TimeStepsTextBox.Size = new System.Drawing.Size(100, 31);
+            this.TimeStepsTextBox.Size = new System.Drawing.Size(100, 20);
             this.TimeStepsTextBox.TabIndex = 22;
             this.TimeStepsTextBox.Text = "10000";
             // 
             // listBox1
             // 
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 25;
             this.listBox1.Location = new System.Drawing.Point(433, 583);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(449, 79);
+            this.listBox1.Size = new System.Drawing.Size(449, 69);
             this.listBox1.TabIndex = 23;
             // 
             // LZlabel
@@ -267,7 +267,7 @@
             this.LZlabel.AutoSize = true;
             this.LZlabel.Location = new System.Drawing.Point(421, 557);
             this.LZlabel.Name = "LZlabel";
-            this.LZlabel.Size = new System.Drawing.Size(118, 25);
+            this.LZlabel.Size = new System.Drawing.Size(59, 13);
             this.LZlabel.TabIndex = 25;
             this.LZlabel.Text = "Laufzeiten:";
             // 
@@ -311,9 +311,18 @@
             this.shiftPotButton.UseVisualStyleBackColor = true;
             this.shiftPotButton.Click += new System.EventHandler(this.shiftPotButton_Click);
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(943, 129);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(100, 20);
+            this.textBox1.TabIndex = 30;
+            this.textBox1.Text = "87";
+            // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(1090, 668);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.shiftPotButton);
             this.Controls.Add(this.potentialButton);
             this.Controls.Add(this.psiPlotButton);
@@ -378,6 +387,7 @@
         private System.Windows.Forms.Button psiPlotButton;
         private System.Windows.Forms.Button potentialButton;
         private System.Windows.Forms.Button shiftPotButton;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 
