@@ -118,11 +118,18 @@ namespace GPEForm
 
             ComplexNumber[] psiStart = (ComplexNumber[]) gpe.psi.Clone();
 
-            if (getgroundstate.Checked) { gpe.getGroundState(); }
-            
+            if (getgroundstate.Checked)
+            {
+                gpe.getGroundState();
+            }else if (DBECCheckBox.Checked)
+            {
+                gpe.getDPsi();
+            }
 
 
-            for (int i=0; i<tsteps; i++)
+
+
+                for (int i=0; i<tsteps; i++)
             {
                     //Berechnung der Funktion Ψ(t) mit der Split-Step-Fourier Methode unter Benutzung des Cooley-Tukey-Algorithmus
                     gpe.splitStepFourier(method);
@@ -309,6 +316,21 @@ namespace GPEForm
             timeModel.Series.Add(heatPsi);
 
             this.plot1.Model = timeModel;
+
+        }
+
+        private void LaufzeitTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label8_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label9_Click(object sender, EventArgs e)
+        {
 
         }
     }

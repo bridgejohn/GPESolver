@@ -55,7 +55,11 @@
             this.psiPlotButton = new System.Windows.Forms.Button();
             this.potentialButton = new System.Windows.Forms.Button();
             this.shiftPotButton = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.EnergieText = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.RekFrequenzText = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.DBECCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // TimeStepIt
@@ -80,7 +84,7 @@
             // 
             // RadFrequenzTextBox
             // 
-            this.RadFrequenzTextBox.Location = new System.Drawing.Point(783, 387);
+            this.RadFrequenzTextBox.Location = new System.Drawing.Point(782, 359);
             this.RadFrequenzTextBox.Name = "RadFrequenzTextBox";
             this.RadFrequenzTextBox.Size = new System.Drawing.Size(100, 20);
             this.RadFrequenzTextBox.TabIndex = 4;
@@ -88,7 +92,7 @@
             // 
             // FrequenzTextBox
             // 
-            this.FrequenzTextBox.Location = new System.Drawing.Point(783, 344);
+            this.FrequenzTextBox.Location = new System.Drawing.Point(782, 325);
             this.FrequenzTextBox.Name = "FrequenzTextBox";
             this.FrequenzTextBox.Size = new System.Drawing.Size(100, 20);
             this.FrequenzTextBox.TabIndex = 5;
@@ -96,7 +100,7 @@
             // 
             // AnzahlTextBox
             // 
-            this.AnzahlTextBox.Location = new System.Drawing.Point(783, 305);
+            this.AnzahlTextBox.Location = new System.Drawing.Point(782, 291);
             this.AnzahlTextBox.Name = "AnzahlTextBox";
             this.AnzahlTextBox.Size = new System.Drawing.Size(100, 20);
             this.AnzahlTextBox.TabIndex = 6;
@@ -105,7 +109,7 @@
             // 
             // StreuTextBox
             // 
-            this.StreuTextBox.Location = new System.Drawing.Point(782, 264);
+            this.StreuTextBox.Location = new System.Drawing.Point(782, 257);
             this.StreuTextBox.Name = "StreuTextBox";
             this.StreuTextBox.Size = new System.Drawing.Size(100, 20);
             this.StreuTextBox.TabIndex = 7;
@@ -115,7 +119,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(459, 226);
+            this.label1.Location = new System.Drawing.Point(486, 226);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 13);
             this.label1.TabIndex = 8;
@@ -124,7 +128,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(459, 264);
+            this.label2.Location = new System.Drawing.Point(486, 260);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(81, 13);
             this.label2.TabIndex = 9;
@@ -133,7 +137,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(459, 308);
+            this.label3.Location = new System.Drawing.Point(486, 294);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(72, 13);
             this.label3.TabIndex = 10;
@@ -142,7 +146,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(459, 347);
+            this.label4.Location = new System.Drawing.Point(486, 328);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(97, 13);
             this.label4.TabIndex = 11;
@@ -151,7 +155,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(459, 390);
+            this.label5.Location = new System.Drawing.Point(486, 362);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(136, 13);
             this.label5.TabIndex = 12;
@@ -172,15 +176,16 @@
             // 
             // LaufzeitTextBox
             // 
-            this.LaufzeitTextBox.Location = new System.Drawing.Point(783, 501);
+            this.LaufzeitTextBox.Location = new System.Drawing.Point(782, 440);
             this.LaufzeitTextBox.Name = "LaufzeitTextBox";
             this.LaufzeitTextBox.Size = new System.Drawing.Size(100, 20);
             this.LaufzeitTextBox.TabIndex = 13;
+            this.LaufzeitTextBox.TextChanged += new System.EventHandler(this.LaufzeitTextBox_TextChanged);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(467, 501);
+            this.label6.Location = new System.Drawing.Point(486, 443);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(107, 13);
             this.label6.TabIndex = 14;
@@ -240,7 +245,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(459, 436);
+            this.label7.Location = new System.Drawing.Point(486, 396);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(112, 13);
             this.label7.TabIndex = 21;
@@ -248,7 +253,7 @@
             // 
             // TimeStepsTextBox
             // 
-            this.TimeStepsTextBox.Location = new System.Drawing.Point(783, 433);
+            this.TimeStepsTextBox.Location = new System.Drawing.Point(782, 393);
             this.TimeStepsTextBox.Name = "TimeStepsTextBox";
             this.TimeStepsTextBox.Size = new System.Drawing.Size(100, 20);
             this.TimeStepsTextBox.TabIndex = 22;
@@ -311,18 +316,58 @@
             this.shiftPotButton.UseVisualStyleBackColor = true;
             this.shiftPotButton.Click += new System.EventHandler(this.shiftPotButton_Click);
             // 
-            // textBox1
+            // EnergieText
             // 
-            this.textBox1.Location = new System.Drawing.Point(943, 129);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 30;
-            this.textBox1.Text = "87";
+            this.EnergieText.Location = new System.Drawing.Point(782, 470);
+            this.EnergieText.Name = "EnergieText";
+            this.EnergieText.Size = new System.Drawing.Size(100, 20);
+            this.EnergieText.TabIndex = 30;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(486, 473);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(65, 13);
+            this.label8.TabIndex = 31;
+            this.label8.Text = "Energie [eV]";
+            this.label8.Click += new System.EventHandler(this.label8_Click);
+            // 
+            // RekFrequenzText
+            // 
+            this.RekFrequenzText.Location = new System.Drawing.Point(782, 500);
+            this.RekFrequenzText.Name = "RekFrequenzText";
+            this.RekFrequenzText.Size = new System.Drawing.Size(100, 20);
+            this.RekFrequenzText.TabIndex = 32;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(486, 503);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(148, 13);
+            this.label9.TabIndex = 33;
+            this.label9.Text = "Rekonstruierte Fallenfrequenz";
+            this.label9.Click += new System.EventHandler(this.label9_Click);
+            // 
+            // DBECCheckBox
+            // 
+            this.DBECCheckBox.AutoSize = true;
+            this.DBECCheckBox.Location = new System.Drawing.Point(578, 121);
+            this.DBECCheckBox.Name = "DBECCheckBox";
+            this.DBECCheckBox.Size = new System.Drawing.Size(84, 17);
+            this.DBECCheckBox.TabIndex = 34;
+            this.DBECCheckBox.Text = "Double BEC";
+            this.DBECCheckBox.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(1090, 668);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.DBECCheckBox);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.RekFrequenzText);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.EnergieText);
             this.Controls.Add(this.shiftPotButton);
             this.Controls.Add(this.potentialButton);
             this.Controls.Add(this.psiPlotButton);
@@ -387,7 +432,11 @@
         private System.Windows.Forms.Button psiPlotButton;
         private System.Windows.Forms.Button potentialButton;
         private System.Windows.Forms.Button shiftPotButton;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox EnergieText;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox RekFrequenzText;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.CheckBox DBECCheckBox;
     }
 }
 

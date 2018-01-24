@@ -207,9 +207,16 @@ xSteps = 512;  // number of points im Ortsraum; power of two
 
         }
 
+        public void getDPsi()
+        {
+            psi = new ComplexNumber[xSteps];
+            for (int i = 0; i < xSteps; i++)
+            {
+                psi[i] = Math.Sqrt(N / lX) * Math.Pow(Math.PI, -0.25) * (Math.Exp(-(X[i]-deltaX*50) * (X[i]-deltaX * 50) / (2.2 * lX * lX))+ Math.Exp(-(X[i] + deltaX * 50) * (X[i] + deltaX * 50) / (2.2 * lX * lX))) /2;
+            }
+        }
 
-
-        public void getGroundState()
+            public void getGroundState()
         {
             //ComplexNumber[] psi_0 = psi;
             double mu = 1;
