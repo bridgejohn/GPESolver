@@ -207,12 +207,12 @@ xSteps = 512;  // number of points im Ortsraum; power of two
 
         }
 
-        public void getDPsi()
+        public void getDPsi(int offset)
         {
             psi = new ComplexNumber[xSteps];
             for (int i = 0; i < xSteps; i++)
             {
-                psi[i] = Math.Sqrt(N / lX) * Math.Pow(Math.PI, -0.25) * (Math.Exp(-(X[i]-deltaX*50) * (X[i]-deltaX * 50) / (2.2 * lX * lX))+ Math.Exp(-(X[i] + deltaX * 50) * (X[i] + deltaX * 50) / (2.2 * lX * lX))) /2;
+                psi[i] = Math.Sqrt(N / lX) * Math.Pow(Math.PI, -0.25) * (Math.Exp(-(X[i] - deltaX * offset) * (X[i] - deltaX * offset) / (2.2 * lX * lX))+ Math.Exp(-(X[i] + deltaX * offset) * (X[i] + deltaX * offset) / (2.2 * lX * lX))) /2;
             }
         }
 

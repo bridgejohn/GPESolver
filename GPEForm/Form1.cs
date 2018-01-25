@@ -24,6 +24,7 @@ namespace GPEForm
         private double wx; //trap frequency
         private double wr; // radial trap frequency
         private int tsteps; // number of time steps
+        private int offsetDBEC; // offset of the two BECs
 
         //Erstellung des Plotbereichs
         private PlotModel myModel = new PlotModel { Title = "|Ψ|²" };
@@ -123,7 +124,8 @@ namespace GPEForm
                 gpe.getGroundState();
             }else if (DBECCheckBox.Checked)
             {
-                gpe.getDPsi();
+                offsetDBEC = Convert.ToInt32(OffsetDBECTextBox.Text);
+                gpe.getDPsi(offsetDBEC);
             }
 
 
@@ -330,6 +332,33 @@ namespace GPEForm
         }
 
         private void label9_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DBECCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (DBECCheckBox.Checked)
+            {
+                OffsetDBECTextBox.Enabled = true;
+            }else
+            {
+                OffsetDBECTextBox.Enabled = false;
+            }
+            
+        }
+
+        private void OffsetDBEC_TextChanged(object sender, EventArgs e)
         {
 
         }
