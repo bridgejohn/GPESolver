@@ -362,5 +362,10 @@ namespace GPEForm
         {
 
         }
+
+        private void FrequenzTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

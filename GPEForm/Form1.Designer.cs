@@ -97,6 +97,7 @@
             this.FrequenzTextBox.Size = new System.Drawing.Size(100, 20);
             this.FrequenzTextBox.TabIndex = 5;
             this.FrequenzTextBox.Text = "40";
+            this.FrequenzTextBox.TextChanged += new System.EventHandler(this.FrequenzTextBox_TextChanged);
             // 
             // AnzahlTextBox
             // 
