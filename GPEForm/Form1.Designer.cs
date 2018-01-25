@@ -55,7 +55,7 @@
             this.psiPlotButton = new System.Windows.Forms.Button();
             this.potentialButton = new System.Windows.Forms.Button();
             this.shiftPotButton = new System.Windows.Forms.Button();
-            this.EnergieText = new System.Windows.Forms.TextBox();
+            this.EnergieTextBox = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.DBECCheckBox = new System.Windows.Forms.CheckBox();
             this.OffsetDBECTextBox = new System.Windows.Forms.TextBox();
@@ -319,12 +319,13 @@
             this.shiftPotButton.UseVisualStyleBackColor = true;
             this.shiftPotButton.Click += new System.EventHandler(this.shiftPotButton_Click);
             // 
-            // EnergieText
+            // EnergieTextBox
             // 
-            this.EnergieText.Location = new System.Drawing.Point(782, 499);
-            this.EnergieText.Name = "EnergieText";
-            this.EnergieText.Size = new System.Drawing.Size(100, 20);
-            this.EnergieText.TabIndex = 30;
+            this.EnergieTextBox.Location = new System.Drawing.Point(782, 499);
+            this.EnergieTextBox.Name = "EnergieTextBox";
+            this.EnergieTextBox.Size = new System.Drawing.Size(100, 20);
+            this.EnergieTextBox.TabIndex = 30;
+            this.EnergieTextBox.Visible = false;
             // 
             // label8
             // 
@@ -334,6 +335,7 @@
             this.label8.Size = new System.Drawing.Size(65, 13);
             this.label8.TabIndex = 31;
             this.label8.Text = "Energie [eV]";
+            this.label8.Visible = false;
             this.label8.Click += new System.EventHandler(this.label8_Click);
             // 
             // DBECCheckBox
@@ -373,7 +375,7 @@
             this.Controls.Add(this.OffsetDBECTextBox);
             this.Controls.Add(this.DBECCheckBox);
             this.Controls.Add(this.label8);
-            this.Controls.Add(this.EnergieText);
+            this.Controls.Add(this.EnergieTextBox);
             this.Controls.Add(this.shiftPotButton);
             this.Controls.Add(this.potentialButton);
             this.Controls.Add(this.psiPlotButton);
@@ -438,7 +440,7 @@
         private System.Windows.Forms.Button psiPlotButton;
         private System.Windows.Forms.Button potentialButton;
         private System.Windows.Forms.Button shiftPotButton;
-        private System.Windows.Forms.TextBox EnergieText;
+        private System.Windows.Forms.TextBox EnergieTextBox;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.CheckBox DBECCheckBox;
         private System.Windows.Forms.TextBox OffsetDBECTextBox;

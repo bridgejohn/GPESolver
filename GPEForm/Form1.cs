@@ -25,6 +25,7 @@ namespace GPEForm
         private double wr; // radial trap frequency
         private int tsteps; // number of time steps
         private int offsetDBEC; // offset of the two BECs
+        private double Energy; // Energy of Psi
 
         //Erstellung des Plotbereichs
         private PlotModel myModel = new PlotModel { Title = "|Ψ|²" };
@@ -174,7 +175,10 @@ namespace GPEForm
 
            
             this.plot1.Model = timeModel; //Darstellen des Plots
-           
+
+            //Energy = ETC.Hamilton(gpe.psi, gpe.V, gpe.deltaX, PhysConst.hbar, mass, gpe.g1D);
+            //EnergieTextBox.Text = Convert.ToString(Energy); //Energie in TextBox 
+
 
             //if(RKCheckBox.Checked)
             //{
