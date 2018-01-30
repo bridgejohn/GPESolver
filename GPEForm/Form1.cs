@@ -28,7 +28,7 @@ namespace GPEForm
         private double Energy; // Energy of Psi
 
         //Erstellung des Plotbereichs
-        private PlotModel myModel = new PlotModel { Title = "|Ψ|²" };
+        private PlotModel myModel = new PlotModel { Title = "|Ψ|²"};
         private PlotModel potModel = new PlotModel { Title = "V" };
         private PlotModel timeModel = new PlotModel { Title = "Time Evolution of the BEC" };
         private LineSeries plotPsi = new LineSeries(); //Erstellen des Datenreihe für Psi²
@@ -59,8 +59,41 @@ namespace GPEForm
                 plotV.Points.Add(new DataPoint(gpe.X[k], gpe.V[k]));
             }
             potModel.Series.Add(plotV);
-            this.plot1.Model = potModel; //Darstellen des Plots
 
+            //Generate Plots
+            this.plot1.Model = myModel; //Darstellen des Plots
+            this.plot1.Model.Axes.Add(new LinearAxis() //Generate X-Axis
+                                          {
+                                           Title = "Postition [m]",
+                                            Position = AxisPosition.Bottom,
+                                          });
+            this.plot1.Model.Axes.Add(new LinearAxis() //Generate Y-Axis
+                                          {
+                                            Title = "Density [1/m]",
+                                            Position = AxisPosition.Left,
+                                          });
+            this.plot1.Model = timeModel; //Darstellen des Plots
+            this.plot1.Model.Axes.Add(new LinearAxis() //Generate X-Axis
+                                          {
+                                           Title = "Postition [m]",
+                                            Position = AxisPosition.Bottom,
+                                          });
+            this.plot1.Model.Axes.Add(new LinearAxis() //Generate Y-Axis
+                                          {
+                                            Title = "Time [s]",
+                                            Position = AxisPosition.Left,
+                                          });
+            this.plot1.Model = potModel; //Darstellen des Plots
+            this.plot1.Model.Axes.Add(new LinearAxis() //Generate X-Axis
+                                          {
+                                           Title = "Postition [m]",
+                                            Position = AxisPosition.Bottom,
+                                          });
+            this.plot1.Model.Axes.Add(new LinearAxis() //Generate Y-Axis
+                                          {
+                                            Title = "Potential [J/hbar]",
+                                            Position = AxisPosition.Left,
+                                          });
         }
         
         private void button1_Click(object sender, EventArgs e)
