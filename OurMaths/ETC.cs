@@ -20,7 +20,6 @@ namespace OurMaths
             for (int i = 0; i < n; i++)
             {
                 f[i] = (F[i + 1] - F[i]) / dx; //Steigung zwischen benachbarten Werten
-                Console.WriteLine("Fi1: " + F[i + 1].ToString() + " , Fi: " + F[i].ToString() + " , fi " + f[i].ToString() + " , dx " + dx.ToString() + " , test " + (F[i + 1] - F[i]).ToString());
             }
             return f;
 
@@ -29,15 +28,16 @@ namespace OurMaths
 
         public static Double Hamilton(ComplexNumber[] F, double[] V, double dx, double hbar, double m, double g1D)
         {
-            double T = 0;
+            ComplexNumber Tc = 0;
+            double Tr = 0;
             double Pot = 0;
             double E = 0;
             ComplexNumber[] derivate = Derivate(F, dx);
             for (int i = 0; i<derivate.Length; i++)
             {
-                T += derivate[i].Norm() * derivate[i].Norm();
+                Tc += derivate[i] * derivate[i];
             }
-            T = T * hbar * hbar / (2 * m);
+            Tr = Tc.Norm() * hbar * hbar / (2 * m);
 
             for (int i = 0; i < F.Length; i++)
             {
