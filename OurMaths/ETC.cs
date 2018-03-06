@@ -44,7 +44,7 @@ namespace OurMaths
                 Pot += V[i] * F[i].Norm() * F[i].Norm() + F[i].Norm() * F[i].Norm() * F[i].Norm() * F[i].Norm() * g1D / 2;
             }
 
-            E = T + Pot;
+            E = Tr + Pot;
             return E;
         }
     }

@@ -60,6 +60,7 @@
             this.DBECCheckBox = new System.Windows.Forms.CheckBox();
             this.OffsetDBECTextBox = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
+            this.ColorBar = new OxyPlot.WindowsForms.PlotView();
             this.SuspendLayout();
             // 
             // TimeStepIt
@@ -167,7 +168,7 @@
             // 
             // plot1
             // 
-            this.plot1.Location = new System.Drawing.Point(0, 0);
+            this.plot1.Location = new System.Drawing.Point(0, -2);
             this.plot1.Name = "plot1";
             this.plot1.PanCursor = System.Windows.Forms.Cursors.Hand;
             this.plot1.Size = new System.Drawing.Size(300, 600);
@@ -368,9 +369,24 @@
             this.label9.TabIndex = 36;
             this.label9.Text = "+/- Offset BECs [dx]";
             // 
+            // ColorBar
+            // 
+            this.ColorBar.Location = new System.Drawing.Point(306, 30);
+            this.ColorBar.Name = "ColorBar";
+            this.ColorBar.PanCursor = System.Windows.Forms.Cursors.Hand;
+            this.ColorBar.Size = new System.Drawing.Size(89, 524);
+            this.ColorBar.TabIndex = 37;
+            this.ColorBar.TabStop = false;
+            this.ColorBar.Text = "plot2";
+            this.ColorBar.Visible = false;
+            this.ColorBar.ZoomHorizontalCursor = System.Windows.Forms.Cursors.SizeWE;
+            this.ColorBar.ZoomRectangleCursor = System.Windows.Forms.Cursors.SizeNWSE;
+            this.ColorBar.ZoomVerticalCursor = System.Windows.Forms.Cursors.SizeNS;
+            // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(1090, 668);
+            this.Controls.Add(this.ColorBar);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.OffsetDBECTextBox);
             this.Controls.Add(this.DBECCheckBox);
@@ -445,6 +461,7 @@
         private System.Windows.Forms.CheckBox DBECCheckBox;
         private System.Windows.Forms.TextBox OffsetDBECTextBox;
         private System.Windows.Forms.Label label9;
+        private OxyPlot.WindowsForms.PlotView ColorBar;
     }
 }
 

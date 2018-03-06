@@ -26,16 +26,20 @@ namespace GPEForm
         private int tsteps; // number of time steps
         private int offsetDBEC; // offset of the two BECs
         private double Energy; // Energy of Psi
+        private double maxColor; //Max value of Colorbar
 
         //Erstellung des Plotbereichs
         private PlotModel myModel = new PlotModel { Title = "|Ψ|²"};
         private PlotModel potModel = new PlotModel { Title = "V" };
         private PlotModel timeModel = new PlotModel { Title = "Time Evolution of the BEC" };
+        private PlotModel ColorBarModel = new PlotModel { };
+        private PlotModel ColorBarModelE = new PlotModel { };
         private LineSeries plotPsi = new LineSeries(); //Erstellen des Datenreihe für Psi²
         private LineSeries plotPsi0 = new LineSeries(); //Erstellen des Datenreihe für Psi², Grundzustand
         private LineSeries plotPsiStart = new LineSeries();
         private LineSeries plotV = new LineSeries();
         private HeatMapSeries heatPsi = new HeatMapSeries();
+        private HeatMapSeries ColorBarSeries = new HeatMapSeries();
 
 
 
@@ -94,6 +98,17 @@ namespace GPEForm
                                             Title = "Potential [J/hbar]",
                                             Position = AxisPosition.Left,
                                           });
+            this.ColorBar.Model = ColorBarModel; //Darstellen des Plots
+            this.ColorBar.Model.Axes.Add(new LinearAxis() //Generate Y-Axis
+                                          {
+                                            Title = "Density [1/m]",
+                                            Position = AxisPosition.Right,
+                                          });
+            this.ColorBar.Model.Axes.Add(new LinearAxis() //Generate X-Axis
+                                          {
+                                            Position = AxisPosition.Bottom,
+                                            IsAxisVisible = false,
+                                          });
         }
         
         private void button1_Click(object sender, EventArgs e)
@@ -111,8 +126,17 @@ namespace GPEForm
             heatPsi.Interpolate = true; //Farbverlauf ein
             //heatPsi.RenderMethod = HeatMapRenderMethod.Bitmap;
 
+            //Erstellen des Datenrasters zur Darstellung der Colorbar
+            ColorBarSeries.X0 = 0; //Festlegen von xmin
+            ColorBarSeries.X1 = 110; //Festlegen von xmin
+            ColorBarSeries.Y0 = 0; //Festlegen der Höhe des PLots
+            ColorBarSeries.Y1 = 10000;
+            ColorBarSeries.Interpolate = true; //Farbverlauf ein
+
             LinearColorAxis cAxis = new LinearColorAxis(); //Erstellen der Farbskala
             cAxis.Palette = OxyPalettes.Jet(100); //Verwendung der 'Jet-Skala'
+            LinearColorAxis cAxisC = new LinearColorAxis(); //Erstellen der Farbskala
+            cAxisC.Palette = OxyPalettes.Jet(100); //Verwendung der 'Jet-Skala'
 
             plotV.Points.Clear();
             for (int k = 0; k < gpe.psi.Length; k++)
@@ -123,10 +147,15 @@ namespace GPEForm
             potModel.Series.Add(plotV);
             this.plot1.Model = potModel; //Darstellen des Plots
 
+            ColorBarModelE.Series.Clear();        //
+            this.ColorBar.Model = ColorBarModelE; //Prevents bug with colorbar if time evolution is selected before starting calculation. Reason unknown.
+
 
 
             timeModel.Axes.Add(cAxis); //Hinzufügen der Farbskala
+            ColorBarModel.Axes.Add(cAxisC);
             double[,] dataMap = new double[gpe.psi.Length, tsteps / 100]; //Erstellen des Datenarrays für den zeitabhängigen Plot
+            double[,] ColorMap = new double[10, 10000]; //Erstellen des Datenarrays für die Colorbar
 
             int writeOut = 0; 
 
@@ -187,12 +216,25 @@ namespace GPEForm
             LaufzeitTextBox.Text = Convert.ToString(Stopwatch1.ElapsedMilliseconds); //Zeitausgabe in TextBox 
             listBox1.Items.Insert(0, method + "-FFT:" + " " + Convert.ToString(Stopwatch1.ElapsedMilliseconds) + "ms" + "  Timesteps" + tsteps.ToString()); //Hinzufügen der Laufzeit, der verwendeten Methode und der Anzahl der Zeitschritte in ListBox
 
+            maxColor = OxyPlot.ArrayExtensions.Max2D(dataMap);
+            for (int k = 0; k < 10000; k++)
+            {
+                for (int l = 0; l < 10; l++)
+                {
+                    ColorMap[l, k] = maxColor * k / 10000;
+                }
+            }
 
             // oxyplot models vorbereiten um dann in 
             heatPsi.Data = dataMap; //Überschreiben der berechneten Daten in das Plotarray
+            ColorBarSeries.Data = ColorMap; //Überschreiben der berechneten Daten in das Plotarray
             timeModel.Series.Clear();
             timeModel.Series.Add(heatPsi); //
                                            //Schreiben der Daten von |Ψ|² in das Plotarray
+
+            ColorBarModel.Series.Clear();
+            ColorBarModel.Series.Add(ColorBarSeries);
+
             for (int k = 0; k < gpe.psi.Length; k++)
             {
                 normedPsi[k] = Math.Pow(gpe.psi[k].Norm(), 2);
@@ -208,6 +250,8 @@ namespace GPEForm
 
            
             this.plot1.Model = timeModel; //Darstellen des Plots
+            this.ColorBar.Model = ColorBarModel; //Darstellen des Plots
+            this.ColorBar.Visible = true;
 
             //Energy = ETC.Hamilton(gpe.psi, gpe.V, gpe.deltaX, PhysConst.hbar, mass, gpe.g1D);
             //EnergieTextBox.Text = Convert.ToString(Energy); //Energie in TextBox 
@@ -291,16 +335,22 @@ namespace GPEForm
         private void timeEvolutionButton_Click(object sender, EventArgs e)
         {
             this.plot1.Model = timeModel;
+            this.ColorBar.Model = ColorBarModel;
+            this.ColorBar.Visible = true;
         }
 
         private void psiPlotButton_Click(object sender, EventArgs e)
         {
             this.plot1.Model = myModel;
+            this.ColorBar.Model = ColorBarModel;
+            this.ColorBar.Visible = false;
         }
 
         private void potentialButton_Click(object sender, EventArgs e)
         {
             this.plot1.Model = potModel;
+            this.ColorBar.Model = ColorBarModel;
+            this.ColorBar.Visible = false;
         }
 
         private void StreuTextBox_TextChanged(object sender, EventArgs e)
