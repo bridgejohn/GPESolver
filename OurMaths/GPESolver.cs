@@ -5,6 +5,11 @@ using OurMaths;
 
 namespace OurMaths
 {
+    /// <summary>
+    /// GPESolver, is the main processesing class of the simulation.
+    /// It needs always to be caled to simulate.
+    /// </summary>
+    /// 
     public class GPESolver
     {
         public double deltaX;
@@ -16,8 +21,8 @@ namespace OurMaths
         public double deltaT;
         public int timeSteps;
 
-        public ComplexNumber[] psi;
-        public double mass;        // mass of rubidium
+        public ComplexNumber[] psi;// wavefunction of the BEC
+        public double mass;        // mass of an atom
         public double aSc;         // Scattering Length 
         public int N;              // Atom number
         public double wX;          // trap freq
@@ -29,30 +34,31 @@ namespace OurMaths
 
         public uint[] reversedBits;
 
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:OurMaths.GPESolver"/> class
+        /// with all necassary definitons and no extern input.
+        /// </summary>
         public GPESolver()
         {
             // Physical Defintion
-            mass = 87 * PhysConst.amu;       // mass of rubidium
-            aSc = 5.8 * Math.Pow(10, -9);    // Scattering Length 
-            N = 1000;                        // Atom number
-            wX = 40 * 2 * Math.PI;           // trap freq
-            lX = Math.Sqrt(PhysConst.hbar / (mass * wX)); //ho length of trap
-            wR = 100 * 2 * Math.PI;          // radial trap freq
-            lR = Math.Sqrt(PhysConst.hbar / (mass * wR)); // ho length of trap
+            mass = 87 * PhysConst.amu;                      // mass of rubidium
+            aSc = 5.8 * Math.Pow(10, -9);                   // Scattering Length 
+            N = 1000;                                       // Atom number
+            wX = 40 * 2 * Math.PI;                          // trap freq
+            lX = Math.Sqrt(PhysConst.hbar / (mass * wX));   // ho length of trap
+            wR = 100 * 2 * Math.PI;                         // radial trap freq
+            lR = Math.Sqrt(PhysConst.hbar / (mass * wR));   // ho length of trap
 
             g1D = 2 * Math.Pow(PhysConst.hbar, 2) * aSc / (mass * lR * lR); // 1D interaction coefficient
 
 
-            /// Grid definitions
-            
-
-xSteps = 512;  // number of points im Ortsraum; power of two
-            kSteps = xSteps;     // number of points in momentum space
-            deltaX = 2 * Math.Pow(10, -7);      // distance between points im Ortsraum
-            deltaK = 2 * Math.PI / ((xSteps - 1) * deltaX);   //distance between points in momentum space
-            deltaT = Math.Pow(10, -6);       // time intervall
-            timeSteps = 100;   // Anzahl der Zeitentwicklungsschritte
+            // Grid definitions
+            xSteps = 512;                                       // number of points in real space, power of two
+            kSteps = xSteps;                                    // number of points in momentum space
+            deltaX = 2 * Math.Pow(10, -7);                      // distance between points in real space
+            deltaK = 2 * Math.PI / ((xSteps - 1) * deltaX);     //distance between points in momentum space
+            deltaT = Math.Pow(10, -6);                          // time intervall
+            timeSteps = 100;                                    // number of timesteps
 
             // create Grids
             X = new double[xSteps];
@@ -62,12 +68,11 @@ xSteps = 512;  // number of points im Ortsraum; power of two
             K = new double[xSteps];
             for (int i = 0; i < xSteps; i++) { K[i] = (i - xSteps / 2 + 1) * deltaK; }
 
-            // prepare for bitReversal
+            // preparation for bitReversal
             reversedBits = new uint[xSteps];
             for (uint i = 0; i < xSteps; i++) reversedBits[i] = FFT.BitReverse(i, (int)Math.Log(xSteps, 2));
 
-            // create Starting wave function  
-            // psi_0=sqrt(N/lx)*(1/pi)ˆ(1/4)*exp(-x.ˆ2/(2*lxˆ2));
+            // create Starting wave function
             psi = new ComplexNumber[xSteps];
             for (int i = 0; i < xSteps; i++)
             {
@@ -76,10 +81,19 @@ xSteps = 512;  // number of points im Ortsraum; power of two
 
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:OurMaths.GPESolver"/> class
+        /// with basic definitions and external input.
+        /// </summary>
+        /// <param name="atomMass">Atom mass.</param>
+        /// <param name="numberOfAtoms">Number of atoms.</param>
+        /// <param name="scatteringlength">Scatteringlength.</param>
+        /// <param name="wx">Wx.</param>
+        /// <param name="wr">Wr.</param>
         public GPESolver(double atomMass, int numberOfAtoms, double scatteringlength, double wx, double wr)
         {
             // Physical Defintion
-            mass = atomMass;       // mass of rubidium
+            mass = atomMass;       // mass of an atom
             aSc = scatteringlength;    // Scattering Length 
             N = numberOfAtoms;                        // Atom number
             wX = wx;           // trap freq
@@ -93,12 +107,12 @@ xSteps = 512;  // number of points im Ortsraum; power of two
             /// Grid definitions
             
 
-xSteps = 512;  // number of points im Ortsraum; power of two
-            kSteps = xSteps;     // number of points in momentum space
-            deltaX = 2 * Math.Pow(10, -7);      // distance between points im Ortsraum
-            deltaK = 2 * Math.PI / ((xSteps - 1) * deltaX);   //distance between points in momentum space
-            deltaT = Math.Pow(10, -6);       // time intervall
-            timeSteps = 10000;   // Anzahl der Zeitentwicklungsschritte
+            xSteps = 512;                                       // number of points im Ortsraum; power of two
+            kSteps = xSteps;                                    // number of points in momentum space
+            deltaX = 2 * Math.Pow(10, -7);                      // distance between points im Ortsraum
+            deltaK = 2 * Math.PI / ((xSteps - 1) * deltaX);     //distance between points in momentum space
+            deltaT = Math.Pow(10, -6);                          // time intervall
+            timeSteps = 10000;                                  // Anzahl der Zeitentwicklungsschritte
 
             // create Grids
             X = new double[xSteps];
@@ -120,8 +134,7 @@ xSteps = 512;  // number of points im Ortsraum; power of two
             for (uint i = 0; i < xSteps; i++) reversedBits[i] = FFT.BitReverse(i, a);
 
 
-            // create Starting wave function  
-            // psi_0=sqrt(N/lx)*(1/pi)ˆ(1/4)*exp(-x.ˆ2/(2*lxˆ2));
+            // create Starting wave function
             psi = new ComplexNumber[xSteps];
             for (int i = 0; i < xSteps; i++)
             {
@@ -131,7 +144,10 @@ xSteps = 512;  // number of points im Ortsraum; power of two
         }
 
 
-
+        /// <summary>
+        /// Simulates on timestep of the time evolution by performing the splitstep fourier method only once.
+        /// </summary>
+        /// <param name="FT">Algorithm which will be used for the Fouriertransformation</param>
         public void splitStepFourier(string FT)
         {
 
@@ -145,7 +161,7 @@ xSteps = 512;  // number of points im Ortsraum; power of two
                                                     * (V[i] + g1D / PhysConst.hbar
                                                     * Math.Pow(psi[i].Norm(), 2)));
             }
-
+            // decides which algorithm will be used for the FT
             switch (FT)
             {
                 case "DFT":
@@ -161,19 +177,19 @@ xSteps = 512;  // number of points im Ortsraum; power of two
                     break;
             }
 
-            psi = FFT.Shift(psi);
+            psi = FFT.Shift(psi); // shift the lower half with the upper one to restore normal order
             for (int i = 0; i < size; i++) psi[i] = psi[i] / size;
 
 
             // psi_k=psi_k*exp(-0.5*dt*1i*(hbar/m)*kˆ2)
             for (int i = 0; i < size; i++)
             {
-                psi[i] = psi[i] * ComplexNumber.Exp(-0.5 * ComplexNumber.ImaginaryOne * deltaT
-                                                    * PhysConst.hbar / mass * Math.Pow(K[i], 2));
+                psi[i] = psi[i] * ComplexNumber.Exp(-0.5 * ComplexNumber.ImaginaryOne * deltaT * PhysConst.hbar / mass * Math.Pow(K[i], 2));
             }
 
 
-            psi = FFT.Shift(psi);
+            psi = FFT.Shift(psi); // shifts again, so that the result of the IFT will be normal orderd
+            // decides which algorithm will be used for the IFT
             switch (FT)
             {
                 case "DFT":
@@ -189,10 +205,7 @@ xSteps = 512;  // number of points im Ortsraum; power of two
                     break;
             }
 
-            for (int i = 0; i < size; i++)
-            {
-                psi[i] = psi[i] * size;
-            }
+            for (int i = 0; i < size; i++) psi[i] = psi[i] * size;
 
             //psi = psi.* exp(-0.5 * 1i * dt * (V + (g1d / hbar) * abs(psi).ˆ2));
             for (int i = 0; i < size; i++)
@@ -216,7 +229,12 @@ xSteps = 512;  // number of points im Ortsraum; power of two
             }
         }
 
-            public void getGroundState()
+
+        /// <summary>
+        /// <c>getGroundState</c> deteremines the Groundstate of a the wavefunction saved in <c>this.psi</c>
+        /// with the imaginary time method
+        /// </summary>
+        public void getGroundState()
         {
             //ComplexNumber[] psi_0 = psi;
             double mu = 1;
@@ -256,7 +274,7 @@ xSteps = 512;  // number of points im Ortsraum; power of two
                     psi[i] = psi[i] * Math.Exp(-0.5 * deltaT * (PhysConst.hbar / this.mass * Math.Pow(K[i], 2)));
                 }
                 psi = FFT.Shift(psi);
-                psi = FFT.IBR(psi, reversedBits); //Inverse fourier transformation of the wave function with the Cooley-tukey algorithm
+                psi = FFT.IBR(psi, reversedBits); //Inverse fourier transformation of the wave function with the bit reverse algorithm
 
                 for (int i = 0; i < psi.Length; i++) psi[i] = psi[i] * kSteps;
 
@@ -310,7 +328,15 @@ xSteps = 512;  // number of points im Ortsraum; power of two
                 psi[i] = psi[i] * ComplexNumber.Exp(-0.5 * ComplexNumber.ImaginaryOne * deltaT * PhysConst.hbar / mass * Math.Pow(K[i], 2));
             }
         }
-
+        /// <summary>
+        /// Updates the parameter of the GPESolver.
+        /// </summary>
+        /// <param name="psi">Psi.</param>
+        /// <param name="atomMass">Atom mass.</param>
+        /// <param name="numberOfAtoms">Number of atoms.</param>
+        /// <param name="scatteringlength">Scatteringlength.</param>
+        /// <param name="wx">Wx.</param>
+        /// <param name="wr">Wr.</param>
         public void updateGPEParameter(ComplexNumber[] psi, double atomMass, int numberOfAtoms, double scatteringlength, double wx, double wr)
         {
             // Physical Defintion
@@ -327,6 +353,11 @@ xSteps = 512;  // number of points im Ortsraum; power of two
             g1D = 2 * Math.Pow(PhysConst.hbar, 2) * aSc / (mass * lR * lR);
         }
 
+        /// <summary>
+        /// Changes the center of the potential in which the BEC is trapped
+        /// by <c>shift</c> times the stepsize of the <c>X</c> array.
+        /// </summary>
+        /// <param name="shift">Shift.</param>
         public void changeCenterOfV(double shift)
         {
             for (int i = 0; i < xSteps; i++) { V[i] = 0.5 * mass * wX * wX * Math.Pow(X[i] + shift, 2) / PhysConst.hbar; }

@@ -76,7 +76,6 @@ namespace OurMaths
         // inverts the Fourier transform of the Cooley-Tukey algorhitm via conjugating before and after the transform
         public static ComplexNumber[] ICT(ComplexNumber[] f)
         {
-            //f = doICT(f);
             for (int i = 0; i < f.Length; i++)
             {
                 f[i] = f[i].Conjugate();
