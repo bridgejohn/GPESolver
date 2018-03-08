@@ -65,10 +65,9 @@
             // 
             // TimeStepIt
             // 
-            this.TimeStepIt.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.TimeStepIt.Location = new System.Drawing.Point(701, 29);
+            this.TimeStepIt.Location = new System.Drawing.Point(733, 27);
             this.TimeStepIt.Name = "TimeStepIt";
-            this.TimeStepIt.Size = new System.Drawing.Size(181, 120);
+            this.TimeStepIt.Size = new System.Drawing.Size(149, 56);
             this.TimeStepIt.TabIndex = 1;
             this.TimeStepIt.Text = "Los!";
             this.TimeStepIt.UseVisualStyleBackColor = true;
@@ -312,9 +311,10 @@
             // 
             // shiftPotButton
             // 
-            this.shiftPotButton.Location = new System.Drawing.Point(888, 30);
+            this.shiftPotButton.Enabled = false;
+            this.shiftPotButton.Location = new System.Drawing.Point(733, 89);
             this.shiftPotButton.Name = "shiftPotButton";
-            this.shiftPotButton.Size = new System.Drawing.Size(189, 55);
+            this.shiftPotButton.Size = new System.Drawing.Size(149, 55);
             this.shiftPotButton.TabIndex = 29;
             this.shiftPotButton.Text = "Shift Potential";
             this.shiftPotButton.UseVisualStyleBackColor = true;
@@ -371,10 +371,10 @@
             // 
             // ColorBar
             // 
-            this.ColorBar.Location = new System.Drawing.Point(306, 30);
+            this.ColorBar.Location = new System.Drawing.Point(298, 30);
             this.ColorBar.Name = "ColorBar";
             this.ColorBar.PanCursor = System.Windows.Forms.Cursors.Hand;
-            this.ColorBar.Size = new System.Drawing.Size(89, 524);
+            this.ColorBar.Size = new System.Drawing.Size(110, 524);
             this.ColorBar.TabIndex = 37;
             this.ColorBar.TabStop = false;
             this.ColorBar.Text = "plot2";
@@ -385,7 +385,7 @@
             // 
             // Form1
             // 
-            this.ClientSize = new System.Drawing.Size(1090, 668);
+            this.ClientSize = new System.Drawing.Size(889, 668);
             this.Controls.Add(this.ColorBar);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.OffsetDBECTextBox);

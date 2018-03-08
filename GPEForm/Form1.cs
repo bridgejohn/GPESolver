@@ -79,7 +79,7 @@ namespace GPEForm
             this.plot1.Model = timeModel; //Darstellen des Plots
             this.plot1.Model.Axes.Add(new LinearAxis() //Generate X-Axis
                                           {
-                                           Title = "Postition [m]",
+                                           Title = "Position [m]",
                                             Position = AxisPosition.Bottom,
                                           });
             this.plot1.Model.Axes.Add(new LinearAxis() //Generate Y-Axis
@@ -90,7 +90,7 @@ namespace GPEForm
             this.plot1.Model = potModel; //Darstellen des Plots
             this.plot1.Model.Axes.Add(new LinearAxis() //Generate X-Axis
                                           {
-                                           Title = "Postition [m]",
+                                           Title = "Position [m]",
                                             Position = AxisPosition.Bottom,
                                           });
             this.plot1.Model.Axes.Add(new LinearAxis() //Generate Y-Axis
@@ -127,11 +127,11 @@ namespace GPEForm
             //heatPsi.RenderMethod = HeatMapRenderMethod.Bitmap;
 
             //Erstellen des Datenrasters zur Darstellung der Colorbar
-            ColorBarSeries.X0 = 0; //Festlegen von xmin
-            ColorBarSeries.X1 = 110; //Festlegen von xmin
-            ColorBarSeries.Y0 = 0; //Festlegen der Höhe des PLots
-            ColorBarSeries.Y1 = 10000;
-            ColorBarSeries.Interpolate = true; //Farbverlauf ein
+            //ColorBarSeries.X0 = 0; //Festlegen von xmin
+            //ColorBarSeries.X1 = 10; //Festlegen von xmin
+            //ColorBarSeries.Y0 = 0; //Festlegen der Höhe des PLots
+            //ColorBarSeries.Y1 = 10000;
+            //ColorBarSeries.Interpolate = true; //Farbverlauf ein
 
             LinearColorAxis cAxis = new LinearColorAxis(); //Erstellen der Farbskala
             cAxis.Palette = OxyPalettes.Jet(100); //Verwendung der 'Jet-Skala'
@@ -225,6 +225,13 @@ namespace GPEForm
                 }
             }
 
+            //Erstellen des Datenrasters zur Darstellung der Colorbar
+            ColorBarSeries.X0 = 0; //Festlegen von xmin
+            ColorBarSeries.X1 = 10; //Festlegen von xmin
+            ColorBarSeries.Y0 = 0; //Festlegen der Höhe des PLots
+            ColorBarSeries.Y1 = maxColor;
+            ColorBarSeries.Interpolate = true; //Farbverlauf ein
+
             // oxyplot models vorbereiten um dann in 
             heatPsi.Data = dataMap; //Überschreiben der berechneten Daten in das Plotarray
             ColorBarSeries.Data = ColorMap; //Überschreiben der berechneten Daten in das Plotarray
@@ -252,6 +259,8 @@ namespace GPEForm
             this.plot1.Model = timeModel; //Darstellen des Plots
             this.ColorBar.Model = ColorBarModel; //Darstellen des Plots
             this.ColorBar.Visible = true;
+
+            this.shiftPotButton.Enabled = true;
 
             //Energy = ETC.Hamilton(gpe.psi, gpe.V, gpe.deltaX, PhysConst.hbar, mass, gpe.g1D);
             //EnergieTextBox.Text = Convert.ToString(Energy); //Energie in TextBox 
@@ -399,6 +408,10 @@ namespace GPEForm
                     writeOut += 100;
                 }
             }
+
+            //ColorMap
+            maxColor = OxyPlot.ArrayExtensions.Max2D(dataMap);
+            ColorBarSeries.Y1 = maxColor;
 
             heatPsi.Data = dataMap; //Überschreiben der berechneten Daten in das Plotarray
             timeModel.Series.Clear();
