@@ -7,9 +7,8 @@ namespace OurMaths
 {
     /// <summary>
     /// GPESolver, is the main processesing class of the simulation.
-    /// It needs always to be caled to simulate.
+    /// It needs always to be called to simulate.
     /// </summary>
-    /// 
     public class GPESolver
     {
         public double deltaX;
@@ -220,6 +219,10 @@ namespace OurMaths
 
         }
 
+        /// <summary>
+        /// Constructs a wave function which consists of two superimposed and in respect to the 0-position antithetical offset normal distributions.
+        /// </summary>
+        /// <param name="offset">Absolute value of the offset in respect to the 0-position.</param>
         public void getDPsi(int offset)
         {
             psi = new ComplexNumber[xSteps];
@@ -311,7 +314,9 @@ namespace OurMaths
 
         }
 
-        // psi=psi.*exp(-0.5*1i*dt*(V+(g1d/hbar)*abs(psi).ˆ2));
+        /// <summary>
+        /// Computes psi=psi.*exp(-0.5*1i*dt*(V+(g1d/hbar)*abs(psi).ˆ2)).
+        /// </summary>
         public void addPhaseSpatial()
         {
             for (int i = 0; i < psi.Length; i++)
@@ -320,7 +325,9 @@ namespace OurMaths
             }
         }
 
-        // psi_k=psi_k*exp(-0.5*dt*1i*(hbar/m)*kˆ2)
+        /// <summary>
+        /// Computes psi_k=psi_k*exp(-0.5*dt*1i*(hbar/m)*kˆ2).
+        /// </summary>
         public void addPhaseMomentum()
         {
             for (int i = 0; i < psi.Length; i++)
@@ -328,6 +335,7 @@ namespace OurMaths
                 psi[i] = psi[i] * ComplexNumber.Exp(-0.5 * ComplexNumber.ImaginaryOne * deltaT * PhysConst.hbar / mass * Math.Pow(K[i], 2));
             }
         }
+
         /// <summary>
         /// Updates the parameter of the GPESolver.
         /// </summary>
