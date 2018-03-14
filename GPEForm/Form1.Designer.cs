@@ -80,7 +80,6 @@
             this.massTextBox.Size = new System.Drawing.Size(100, 20);
             this.massTextBox.TabIndex = 2;
             this.massTextBox.Text = "87";
-            this.massTextBox.TextChanged += new System.EventHandler(this.massTextBox_TextChanged);
             // 
             // RadFrequenzTextBox
             // 
@@ -97,7 +96,6 @@
             this.FrequenzTextBox.Size = new System.Drawing.Size(100, 20);
             this.FrequenzTextBox.TabIndex = 5;
             this.FrequenzTextBox.Text = "40";
-            this.FrequenzTextBox.TextChanged += new System.EventHandler(this.FrequenzTextBox_TextChanged);
             // 
             // AnzahlTextBox
             // 
@@ -106,7 +104,6 @@
             this.AnzahlTextBox.Size = new System.Drawing.Size(100, 20);
             this.AnzahlTextBox.TabIndex = 6;
             this.AnzahlTextBox.Text = "1000";
-            this.AnzahlTextBox.TextChanged += new System.EventHandler(this.AnzahlTextBox_TextChanged);
             // 
             // StreuTextBox
             // 
@@ -115,7 +112,6 @@
             this.StreuTextBox.Size = new System.Drawing.Size(100, 20);
             this.StreuTextBox.TabIndex = 7;
             this.StreuTextBox.Text = "5,8";
-            this.StreuTextBox.TextChanged += new System.EventHandler(this.StreuTextBox_TextChanged);
             // 
             // label1
             // 
@@ -143,7 +139,6 @@
             this.label3.Size = new System.Drawing.Size(72, 13);
             this.label3.TabIndex = 10;
             this.label3.Text = "Anzahl Atome";
-            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // label4
             // 
@@ -153,7 +148,6 @@
             this.label4.Size = new System.Drawing.Size(97, 13);
             this.label4.TabIndex = 11;
             this.label4.Text = "Fallenfrequenz [2π]";
-            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // label5
             // 
@@ -163,7 +157,6 @@
             this.label5.Size = new System.Drawing.Size(136, 13);
             this.label5.TabIndex = 12;
             this.label5.Text = "Radiale Fallenfrequenz [2π]";
-            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // plot1
             // 
@@ -183,7 +176,6 @@
             this.LaufzeitTextBox.Name = "LaufzeitTextBox";
             this.LaufzeitTextBox.Size = new System.Drawing.Size(100, 20);
             this.LaufzeitTextBox.TabIndex = 13;
-            this.LaufzeitTextBox.TextChanged += new System.EventHandler(this.LaufzeitTextBox_TextChanged);
             // 
             // label6
             // 
@@ -243,7 +235,6 @@
             this.bitReverse.TabIndex = 19;
             this.bitReverse.Text = "BitReverse";
             this.bitReverse.UseVisualStyleBackColor = true;
-            this.bitReverse.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // label7
             // 
@@ -337,7 +328,6 @@
             this.label8.TabIndex = 31;
             this.label8.Text = "Energie [eV]";
             this.label8.Visible = false;
-            this.label8.Click += new System.EventHandler(this.label8_Click);
             // 
             // DBECCheckBox
             // 
@@ -358,7 +348,6 @@
             this.OffsetDBECTextBox.Size = new System.Drawing.Size(100, 20);
             this.OffsetDBECTextBox.TabIndex = 35;
             this.OffsetDBECTextBox.Text = "60";
-            this.OffsetDBECTextBox.TextChanged += new System.EventHandler(this.OffsetDBEC_TextChanged);
             // 
             // label9
             // 
