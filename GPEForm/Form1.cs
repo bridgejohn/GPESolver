@@ -10,12 +10,23 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using OurMaths;
 
+// Using Oxyplot to show the results
 using OxyPlot;
 using OxyPlot.Series;
 using OxyPlot.Axes;
 
 namespace GPEForm
 {
+    /// <summary>
+    /// Form 1 is the User Interface. 
+    /// It is used to manage which simulation should be executed and which plot should be shown.
+    /// The variations possible are a calculation of the time-development using the split-step-fourier 
+    /// method, where you can choose between the Cooley-Tukey-algorithm and the bit-reverse-algorithm
+    /// for the fast-fourier-transformation or the discrete fourier transformation.
+    /// It is also possible to calculate the ground state of the wavefunction or to see the time development
+    /// of two BECs or of a BEC in a shifted potential.
+    /// </summary>
+    /// 
     public partial class Form1 : Form
     {
         private double mass; // atom mass
@@ -25,46 +36,57 @@ namespace GPEForm
         private double wr; // radial trap frequency
         private int tsteps; // number of time steps
         private int offsetDBEC; // offset of the two BECs
-        private double Energy; // Energy of Psi
+        //private double Energy; // Energy of Psi   kann die gelöscht werden?
         private double maxColor; //Max value of Colorbar
 
-        //Erstellung des Plotbereichs
+        //Creation of the plot area
+        //Creation of the three plot models to picture the starting and final |Ψ|², the potential 
+        //and the time evolution of |Ψ|²
         private PlotModel myModel = new PlotModel { Title = "|Ψ|²"};
         private PlotModel potModel = new PlotModel { Title = "V" };
         private PlotModel timeModel = new PlotModel { Title = "Time Evolution of the BEC" };
+        //Creation of two color bars for the time-evolution plot
         private PlotModel ColorBarModel = new PlotModel { };
         private PlotModel ColorBarModelE = new PlotModel { };
-        private LineSeries plotPsi = new LineSeries(); //Erstellen des Datenreihe für Psi²
-        private LineSeries plotPsi0 = new LineSeries(); //Erstellen des Datenreihe für Psi², Grundzustand
-        private LineSeries plotPsiStart = new LineSeries();
-        private LineSeries plotV = new LineSeries();
+        //Creation of the data series, that can be shown in the non-time-evolution plots 
+        private LineSeries plotPsi = new LineSeries();      //|Ψ|²
+        private LineSeries plotPsi0 = new LineSeries();     //|Ψ|² of the ground state
+        private LineSeries plotPsiStart = new LineSeries(); //|Ψ|² in the beginning
+        private LineSeries plotV = new LineSeries();        // the trap potential
+        //Creation of the data series, that can be shown in the time-evolution plot
         private HeatMapSeries heatPsi = new HeatMapSeries();
         private HeatMapSeries ColorBarSeries = new HeatMapSeries();
 
 
-
+        //declaration of the GPE solver
         private GPESolver gpe;
 
 
-
+        /// <summary>
+        /// Initializes the form. This includes the read out of the physical parameters and the
+        /// preparation of the plot area.
+        /// </summary>
         public Form1()
         {
             InitializeComponent();
             //read out of parameters
-            mass = Convert.ToDouble(massTextBox.Text) * PhysConst.amu;
-            sclength = Convert.ToDouble(StreuTextBox.Text) * Math.Pow(10, -9);
-            anzahl = Convert.ToInt32(AnzahlTextBox.Text);
-            wx = Convert.ToDouble(FrequenzTextBox.Text) * 2 * Math.PI;
-            wr = Convert.ToDouble(RadFrequenzTextBox.Text) * 2 * Math.PI;
-            tsteps = Convert.ToInt32(TimeStepsTextBox.Text);
-            gpe = new GPESolver(mass, anzahl, sclength, wx, wr);
+            mass = Convert.ToDouble(massTextBox.Text) * PhysConst.amu;          // atom mass
+            sclength = Convert.ToDouble(StreuTextBox.Text) * Math.Pow(10, -9);  // scattering length
+            anzahl = Convert.ToInt32(AnzahlTextBox.Text);                       // number of atoms
+            wx = Convert.ToDouble(FrequenzTextBox.Text) * 2 * Math.PI;          // trap frequency
+            wr = Convert.ToDouble(RadFrequenzTextBox.Text) * 2 * Math.PI;       // radial trap frequency
+            tsteps = Convert.ToInt32(TimeStepsTextBox.Text);                    // number of time steps
+
+            // Initialization of the GPE solver, transferring the read-out parameters
+            gpe = new GPESolver(mass, anzahl, sclength, wx, wr);                
+            //Creation of the data series for the plot of the potential
             for (int k = 0; k < gpe.psi.Length; k++)
             {
                 plotV.Points.Add(new DataPoint(gpe.X[k], gpe.V[k]));
             }
-            potModel.Series.Add(plotV);
+            potModel.Series.Add(plotV); //Adding the data series to the plot model for showing the potential
 
-            //Generate Plots
+            //Generate Plots  noch fragen
             this.plot1.Model = myModel; //Darstellen des Plots
             this.plot1.Model.Axes.Add(new LinearAxis() //Generate X-Axis
                                           {
@@ -110,59 +132,68 @@ namespace GPEForm
                                             IsAxisVisible = false,
                                           });
         }
-        
+        /// <summary>
+        /// Starts the calculation of the time development of the wavefunction under given parameters.
+        /// As starting wave function it is either used the ground state wave function, if calculated before
+        /// or a default one, or another one, if the double BEC checkbox is selected.
+        /// </summary>
         private void button1_Click(object sender, EventArgs e)
         {
-            getParams(); //Auslesen der Parameter
-            gpe = new GPESolver(mass, anzahl, sclength, wx,wr);// Erstellen des GPE-Solvers
-            double[] normedPsi = new double[gpe.psi.Length]; //Erstellen eines Arrays für Psi²
-            //Vorbereitung des Plots
-            
-            //Erstellen des Datenrasters zur Darstellung von Psi(t)
-            heatPsi.X0 = gpe.X[0]; //Festlegen von xmin
-            heatPsi.X1 = gpe.X[gpe.xSteps-1]; //Festlegen von xmin
-            heatPsi.Y0 = 0; //Festlegen der Höhe des PLots
-            heatPsi.Y1 = gpe.deltaT*tsteps;
-            heatPsi.Interpolate = true; //Farbverlauf ein
-            //heatPsi.RenderMethod = HeatMapRenderMethod.Bitmap;
+            getParams(); //read-out of the parameters
+            // Initialization of the GPE solver, transferring the read-out parameters
+            gpe = new GPESolver(mass, anzahl, sclength, wx,wr);
 
-            //Erstellen des Datenrasters zur Darstellung der Colorbar
-            //ColorBarSeries.X0 = 0; //Festlegen von xmin
-            //ColorBarSeries.X1 = 10; //Festlegen von xmin
-            //ColorBarSeries.Y0 = 0; //Festlegen der Höhe des PLots
-            //ColorBarSeries.Y1 = 10000;
-            //ColorBarSeries.Interpolate = true; //Farbverlauf ein
+            double[] normedPsi = new double[gpe.psi.Length];   //Creation of the array for |Ψ|²
 
-            LinearColorAxis cAxis = new LinearColorAxis(); //Erstellen der Farbskala
-            cAxis.Palette = OxyPalettes.Jet(100); //Verwendung der 'Jet-Skala'
-            LinearColorAxis cAxisC = new LinearColorAxis(); //Erstellen der Farbskala
-            cAxisC.Palette = OxyPalettes.Jet(100); //Verwendung der 'Jet-Skala'
+            //Plot of the trap potential, that is shown during the calculation of the time-evolution calculation
 
-            plotV.Points.Clear();
+            plotV.Points.Clear(); // Deletes previous data points from the data series
+
+            //Creation of the new data series for the plot of the potential
             for (int k = 0; k < gpe.psi.Length; k++)
             {
                 plotV.Points.Add(new DataPoint(gpe.X[k], gpe.V[k]));
             }
-            potModel.Series.Clear();
-            potModel.Series.Add(plotV);
-            this.plot1.Model = potModel; //Darstellen des Plots
 
-            ColorBarModelE.Series.Clear();        //
+            potModel.Series.Clear();     // Deletes previous data series from the plotmodel
+            potModel.Series.Add(plotV);  // Adds new data series to the plotmodel
+            this.plot1.Model = potModel; // Shows the potential plot
+
+            // Preparation of the time-dependent plot
+
+            // Creation of the data grid for the time-dependent plot of |Ψ|²
+            heatPsi.X0 = gpe.X[0];              // set xmin
+            heatPsi.X1 = gpe.X[gpe.xSteps-1];   // set xmax
+            heatPsi.Y0 = 0;                     
+            heatPsi.Y1 = gpe.deltaT*tsteps;     //set the height of the plot
+
+            heatPsi.Interpolate = true;         //switch on color gradient
+            
+            //Creation of two color scales, using the 'Jet-palette'
+            LinearColorAxis cAxis = new LinearColorAxis();  
+            cAxis.Palette = OxyPalettes.Jet(100);           
+            LinearColorAxis cAxisC = new LinearColorAxis(); 
+            cAxisC.Palette = OxyPalettes.Jet(100);          
+            
+            
+
+            ColorBarModelE.Series.Clear();        
             this.ColorBar.Model = ColorBarModelE; //Prevents bug with colorbar if time evolution is selected before starting calculation. Reason unknown.
 
 
 
-            timeModel.Axes.Add(cAxis); //Hinzufügen der Farbskala
+            timeModel.Axes.Add(cAxis); // Adding the color axis
             ColorBarModel.Axes.Add(cAxisC);
-            double[,] dataMap = new double[gpe.psi.Length, tsteps / 100]; //Erstellen des Datenarrays für den zeitabhängigen Plot
-            double[,] ColorMap = new double[10, 10000]; //Erstellen des Datenarrays für die Colorbar
+            double[,] dataMap = new double[gpe.psi.Length, tsteps / 100]; //Initializing data array for time-dependent plot
+            double[,] ColorMap = new double[10, 10000];                   //Initializing data array for color bar
 
-            int writeOut = 0; 
+            
 
-            Stopwatch Stopwatch1 = new Stopwatch(); //Erstellung der Stopuhr zum Messen der Laufzeit
-            Stopwatch1.Start(); //Starten der Laufzeit
+            Stopwatch Stopwatch1 = new Stopwatch(); // Initialisation of the stopwatch
+            Stopwatch1.Start();                     // Start of the stopwatch
 
-            //Entscheidung der Methode zur Lösung der GPE
+            //deciding which method to use for the time-development-calculation, 
+            //if there is no method chosen, Bit-Reverse is used
             string method;
 
 
@@ -180,6 +211,8 @@ namespace GPEForm
                 method = "BR";
             }
 
+            // The starting wave function is created, either using the default one (see GPESolver) or the ground state
+            // is calculated, or the double BEC function is used with the offset chosen in the GUI
             ComplexNumber[] psiStart = (ComplexNumber[]) gpe.psi.Clone();
 
             if (getgroundstate.Checked)
@@ -192,15 +225,15 @@ namespace GPEForm
             }
 
 
+            int writeOut = 0;
 
-
-                for (int i=0; i<tsteps; i++)
-            {
-                    //Berechnung der Funktion Ψ(t) mit der Split-Step-Fourier Methode unter Benutzung des Cooley-Tukey-Algorithmus
+            for (int i=0; i<tsteps; i++)
+                {
+                    // Calculation of Ψ(t) using the split-step-fourier method using the chosen algorithm for the FFT
                     gpe.splitStepFourier(method);
                     
 
-                    //Füllen des Plotarrays mit den Werten aus der Berechnung für alle 100 Schritte
+                    // Writing every 100th calculated value into the plot array
                     if (i == writeOut)
                     {
                         for (int k = 0; k < gpe.psi.Length; k++)
@@ -210,13 +243,13 @@ namespace GPEForm
                         }
                         writeOut += 100;
                     }
-            }
+                }
            
-            Stopwatch1.Stop(); //Stoppen der Zeit nach Berechnung
-            LaufzeitTextBox.Text = Convert.ToString(Stopwatch1.ElapsedMilliseconds); //Zeitausgabe in TextBox 
-            listBox1.Items.Insert(0, method + "-FFT:" + " " + Convert.ToString(Stopwatch1.ElapsedMilliseconds) + "ms" + "  Timesteps" + tsteps.ToString()); //Hinzufügen der Laufzeit, der verwendeten Methode und der Anzahl der Zeitschritte in ListBox
+            Stopwatch1.Stop();                                                       // Stops the time after calculation
+            LaufzeitTextBox.Text = Convert.ToString(Stopwatch1.ElapsedMilliseconds); // Shows runtime in textbox
+            listBox1.Items.Insert(0, method + "-FFT:" + " " + Convert.ToString(Stopwatch1.ElapsedMilliseconds) + "ms" + "  Timesteps" + tsteps.ToString()); // Adds runtime, used method and number of time steps to listbox
 
-            maxColor = OxyPlot.ArrayExtensions.Max2D(dataMap);
+            maxColor = OxyPlot.ArrayExtensions.Max2D(dataMap); //@David ich weiß leider nicht so richtig was das macht
             for (int k = 0; k < 10000; k++)
             {
                 for (int l = 0; l < 10; l++)
@@ -224,24 +257,24 @@ namespace GPEForm
                     ColorMap[l, k] = maxColor * k / 10000;
                 }
             }
-
-            //Erstellen des Datenrasters zur Darstellung der Colorbar
-            ColorBarSeries.X0 = 0; //Festlegen von xmin
-            ColorBarSeries.X1 = 10; //Festlegen von xmin
-            ColorBarSeries.Y0 = 0; //Festlegen der Höhe des PLots
+            // Creation of the data grid for the display of the colorbar 
+            ColorBarSeries.X0 = 0; //set xmin
+            ColorBarSeries.X1 = 10; //set xmax
+            ColorBarSeries.Y0 = 0; //set height of the colorbar
             ColorBarSeries.Y1 = maxColor;
-            ColorBarSeries.Interpolate = true; //Farbverlauf ein
+            ColorBarSeries.Interpolate = true; //switch on color gradient
 
-            // oxyplot models vorbereiten um dann in 
-            heatPsi.Data = dataMap; //Überschreiben der berechneten Daten in das Plotarray
-            ColorBarSeries.Data = ColorMap; //Überschreiben der berechneten Daten in das Plotarray
+            //Preparing Oxyplot 
+            heatPsi.Data = dataMap;         // Write calculated data into plotarray
+            ColorBarSeries.Data = ColorMap; // Write calculated data into plotarray
             timeModel.Series.Clear();
-            timeModel.Series.Add(heatPsi); //
-                                           //Schreiben der Daten von |Ψ|² in das Plotarray
+            timeModel.Series.Add(heatPsi);  // Add plotarray to plotmodel
 
+            // Add the recent data series to the color bar model
             ColorBarModel.Series.Clear();
             ColorBarModel.Series.Add(ColorBarSeries);
 
+            //Calculating |Ψ|² and |Ψstart|² and writing it into the plot arrays
             for (int k = 0; k < gpe.psi.Length; k++)
             {
                 normedPsi[k] = Math.Pow(gpe.psi[k].Norm(), 2);
@@ -251,86 +284,39 @@ namespace GPEForm
 
             }
 
+            // Deleting the old series and add the new ones
             myModel.Series.Clear();
             myModel.Series.Add(plotPsiStart);
             myModel.Series.Add(plotPsi); //
 
            
-            this.plot1.Model = timeModel; //Darstellen des Plots
-            this.ColorBar.Model = ColorBarModel; //Darstellen des Plots
-            this.ColorBar.Visible = true;
+            this.plot1.Model = timeModel;        // Show the time-dependent plot
+            this.ColorBar.Model = ColorBarModel; // Show the created color bar
+            this.ColorBar.Visible = true;        // Make the color bar visible
 
-            this.shiftPotButton.Enabled = true;
+            this.shiftPotButton.Enabled = true;  // The shift potential button is usable now
 
             //Energy = ETC.Hamilton(gpe.psi, gpe.V, gpe.deltaX, PhysConst.hbar, mass, gpe.g1D);
             //EnergieTextBox.Text = Convert.ToString(Energy); //Energie in TextBox 
-
-
-            //if(RKCheckBox.Checked)
-            //{
-            //    Stopwatch Stopwatch3 = new Stopwatch();
-            //    Stopwatch3.Start();
-
-            //    //Runge-Kutta
-
-            //    Stopwatch3.Stop();
-            //    LaufzeitTextBox.Text = Convert.ToString(Stopwatch3.ElapsedMilliseconds);
-
-
-            //    for (int i = 0; i < gpe.psi.Length; i++)
-            //    {
-            //        normedPsi[i] = Math.Pow(gpe.psi[i].Norm(), 2);
-            //        plotPsi.Points.Add(new DataPoint(gpe.X[i], normedPsi[i]));
-
-            //    }
-
-            //    myModel.Series.Add(plotPsi);
-
-
-            //}
-
-
-
-
-
-            //DrawFunction(normedPsi);
-
-            //LinearAxis LAX = new LinearAxis()
-            //{
-            //    Position = OxyPlot.Axes.AxisPosition.Bottom,
-            //    AbsoluteMaximum = Math.Pow(10,-6),
-            //    AbsoluteMinimum = -Math.Pow(10, -6),
-            //};
-            //LinearAxis LAY = new LinearAxis()
-            //{
-            //    Position = OxyPlot.Axes.AxisPosition.Left,
-            //    AbsoluteMaximum = 4*Math.Pow(10, 8),
-            //    AbsoluteMinimum = 0,
-            //};
-            //myModel.Axes.Add(LAX);
-            //myModel.Axes.Add(LAY);
-            //myModel.Series.Add(plotPsi);
-
-
-
         }
 
-        private void label5_Click(object sender, EventArgs e)
-        {
-
-        }
-
+       
+        /// <summary>
+        /// Starts the calculation of the time development of the wavefunction under given parameters.
+        /// As starting wave function it is either used the ground state wave function, if calculated before
+        /// or a default one, or another one, if the double BEC checkbox is selected.
+        /// </summary>
         private void ParameterButton_Click(object sender, EventArgs e)
         {
             //getParams();
             listBox1.Items.Clear();
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
+       
+        /// <summary>
+        /// Reads out the physical parameters that are written in the text boxes in the GUI and saves them
+        /// as the corresponding variables.
+        /// </summary>
         private void getParams()
         {
             mass = Convert.ToDouble(massTextBox.Text) * PhysConst.amu;
@@ -341,6 +327,9 @@ namespace GPEForm
             tsteps = Convert.ToInt32(TimeStepsTextBox.Text);
         }
 
+        /// <summary>
+        /// Shows the plot of the time-evolution of |Ψ|².
+        /// </summary>
         private void timeEvolutionButton_Click(object sender, EventArgs e)
         {
             this.plot1.Model = timeModel;
@@ -348,6 +337,9 @@ namespace GPEForm
             this.ColorBar.Visible = true;
         }
 
+        /// <summary>
+        /// Shows the plot of the start and end |Ψ|².
+        /// </summary>
         private void psiPlotButton_Click(object sender, EventArgs e)
         {
             this.plot1.Model = myModel;
@@ -355,6 +347,9 @@ namespace GPEForm
             this.ColorBar.Visible = false;
         }
 
+        /// <summary>
+        /// Shows the plot of the trap potential.
+        /// </summary>
         private void potentialButton_Click(object sender, EventArgs e)
         {
             this.plot1.Model = potModel;
@@ -362,42 +357,35 @@ namespace GPEForm
             this.ColorBar.Visible = false;
         }
 
-        private void StreuTextBox_TextChanged(object sender, EventArgs e)
-        {
 
-        }
-
-        private void massTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void AnzahlTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
+        /// <summary>
+        /// Shifts position of the potential in for 10µm in x direction in the beginning. Afterwards the
+        /// time-evolution of the wave function is calculated, using the Bit Reversal algorithm.
+        /// </summary>
         private void shiftPotButton_Click(object sender, EventArgs e)
         {
-            gpe.changeCenterOfV(Math.Pow(10, -5) * 1);
-            plotV.Points.Clear();
+            gpe.changeCenterOfV(Math.Pow(10, -5) * 1);  // Shift of the potential
+            plotV.Points.Clear();                       // Deleting the data points of the previous potential
+
+            //Creates the data points for the new potential
             for (int k = 0; k < gpe.psi.Length; k++)
             {
                 plotV.Points.Add(new DataPoint(gpe.X[k], gpe.V[k]));
             }
-            potModel.Series.Clear();
-            potModel.Series.Add(plotV);
-            this.plot1.Model = potModel;
+
+            potModel.Series.Clear();                    // deletes previous data series
+            potModel.Series.Add(plotV);                 // adds new data series
+            this.plot1.Model = potModel;                // shows new plot of the potential
 
             double[,] dataMap = new double[gpe.psi.Length, tsteps / 100];
             int writeOut = 0;
             for (int i = 0; i < tsteps; i++)
             {
-                //Berechnung der Funktion Ψ(t) mit der Split-Step-Fourier Methode unter Benutzung des Cooley-Tukey-Algorithmus
+                //Calculation of Ψ(t) using the split-step-fourier-method using the bit-reverse algorithm for the FFT
                 gpe.splitStepFourier("BR");
 
 
-                //Füllen des Plotarrays mit den Werten aus der Berechnung für alle 100 Schritte
+                // Writing every 100th calculated value into the plot array
                 if (i == writeOut)
                 {
                     for (int k = 0; k < gpe.psi.Length; k++)
@@ -413,11 +401,27 @@ namespace GPEForm
             maxColor = OxyPlot.ArrayExtensions.Max2D(dataMap);
             ColorBarSeries.Y1 = maxColor;
 
-            heatPsi.Data = dataMap; //Überschreiben der berechneten Daten in das Plotarray
-            timeModel.Series.Clear();
-            timeModel.Series.Add(heatPsi);
+            heatPsi.Data = dataMap;         // Writes calculated data series into plot array
+            timeModel.Series.Clear();       // clears plot model from previous data series
+            timeModel.Series.Add(heatPsi);  // adds new data series
 
-            this.plot1.Model = timeModel;
+            this.plot1.Model = timeModel;   // shows new data series in plot
+
+        }
+        /// <summary>
+        /// Enables writing in the offset textbox for the case, that the double BEC is chosen. It is 
+        /// executed whenever the status of the checkbox is changed.
+        /// </summary>
+        private void DBECCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (DBECCheckBox.Checked)
+            {
+                OffsetDBECTextBox.Enabled = true;
+            }
+            else
+            {
+                OffsetDBECTextBox.Enabled = false;
+            }
 
         }
 
@@ -446,17 +450,7 @@ namespace GPEForm
 
         }
 
-        private void DBECCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (DBECCheckBox.Checked)
-            {
-                OffsetDBECTextBox.Enabled = true;
-            }else
-            {
-                OffsetDBECTextBox.Enabled = false;
-            }
-            
-        }
+        
 
         private void OffsetDBEC_TextChanged(object sender, EventArgs e)
         {
@@ -464,6 +458,28 @@ namespace GPEForm
         }
 
         private void FrequenzTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+        private void StreuTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void massTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void AnzahlTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+        private void label5_Click(object sender, EventArgs e)
         {
 
         }
